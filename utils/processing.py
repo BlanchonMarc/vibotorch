@@ -29,11 +29,16 @@ The module structure is the following:
 
   . . .
 
+- The ``transform_tensor`` function to transform a tensor using
+  the callable method Compose of PyTorch
+  see : http://pytorch.org/docs/master/torchvision/transforms.html
 
 """
 
 import torch
-from typing import Dict, List
+from typing import Dict, List, Callable
+from PIL import Image
+import torchvision
 
 def tensor_ConcatFromDict(ds : Dict[str, torch.Tensor],
                           inds : List[str],
@@ -89,3 +94,40 @@ def tensor_ConcatFromList(ds : List[torch.Tensor],
         torch.cat((_storage, ds[indx]), dim)
 
     return _storage
+
+def transform_tensor(inputs : torch.Tensor,
+                     transformation : Callable) -> torch.Tensor:
+    """Function performing torch.Tensor transformation
+
+    Parameters
+    ---------
+    inputs : torch.Tensor
+        The input Tensor
+
+    transformation: Callable
+        Callable collection made from PyTorch Compose function
+
+    Example:
+    >>> in = torch.Tensor(2x3x10x10)
+    >>> trans = transforms.Compose([
+                        transforms.CenterCrop(10),
+                        transforms.ToTensor(),
+                        ])
+
+    >>> transformed_Tensor = transform_tensor(int, trans)
+
+    Returns
+    -------
+    _out : torch.Tensor
+        The resulting Tensor transformed
+    """
+    endx = list(inputs.size())[0]
+
+    _storage = [torchvision.transforms.ToPILImage[inputs[indx]]
+                for indx in range(endx)]
+
+    _out = [transformation(_storage[indy])
+            for indy in range(len(_storage))]
+
+
+    return torch.stack(_out)
