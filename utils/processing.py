@@ -32,7 +32,7 @@ The module structure is the following:
 - The ``transform_tensor`` function to transform a tensor using
   the callable method Compose of PyTorch
   see : http://pytorch.org/docs/master/torchvision/transforms.html
-  
+
 """
 
 import torch
@@ -127,4 +127,5 @@ def transform_tensor(inputs : torch.Tensor,
     _out = [transformation(_storage[indy])
             for indy in range(len(_storage))]
 
-    return _out
+
+    return torch.stack(_out)
