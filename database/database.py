@@ -13,7 +13,7 @@ The module structure is the following:
 """
 
 from typing import List, Dict
-import datetime
+from timeit import default_timer as timer
 import glob
 import os
 import torch
@@ -31,6 +31,7 @@ class DatabaseLoader:
         self.ext = ''
         self.sizes = []
         self.output = {}
+        self.time = None
 
     def __call__(self) -> Dict[str, torch.Tensor]:
         """Default __call__ returning the converted dataset """
@@ -110,6 +111,7 @@ class DatabaseTorch(DatabaseLoader):
                     len(self.train_folders + self.test_folders)))
 
         self.output = {}
+        self.time = timer()
 
 
     def __call__(self, batch_size : int = 1,
@@ -165,7 +167,8 @@ class DatabaseTorch(DatabaseLoader):
                                                  inde = inde,
                                                  ds = tmp_dataloaders)
             inds = inde
-
+        print('Data Loaded - Time Elapsed: ' + str(
+            timer() - self.time) + 's')
         return self.output
 
     def _to_tensor(self, inds : int, inde : int,

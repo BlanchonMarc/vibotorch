@@ -2,7 +2,7 @@
 
 from database.database import DatabaseLoader,DatabaseTorch
 
-root_dataset = '../Datasets/CamVid/'
+root_dataset = '/Users/marc/Github/NeuralNetwork/Datasets/CamVid/'
 inputs = ['train/', 'val/', 'test/']
 checkings = ['trainannot/', 'valannot/', 'testannot/']
 Db = DatabaseTorch(root=root_dataset, train_folders=inputs, test_folders=checkings)
