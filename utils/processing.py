@@ -108,11 +108,13 @@ def transform_tensor(inputs : torch.Tensor,
         Callable collection made from PyTorch Compose function
 
     Example:
-    in = torch.Tensor(2x3x10x10)
-    trans = transforms.Compose([
+    >>> in = torch.Tensor(2x3x10x10)
+    >>> trans = transforms.Compose([
                         transforms.CenterCrop(10),
                         transforms.ToTensor(),
                         ])
+
+    >>> transformed_Tensor = transform_tensor(int, trans)
 
     Returns
     -------
