@@ -8,6 +8,4 @@ vibotorch
     |__ database
     |__ nn
     |__ utils
-
-
 ```
