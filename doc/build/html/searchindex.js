@@ -1,0 +1,1 @@
+Search.setIndex({docnames:["api","index"],envversion:52,filenames:["api.rst","index.rst"],objects:{},objnames:{},objtypes:{},terms:{index:1,modul:1,page:1,search:1},titles:["&lt;no title&gt;","Welcome to vibotorch\u2019s documentation!"],titleterms:{document:1,indic:1,tabl:1,vibotorch:1,welcom:1}})
