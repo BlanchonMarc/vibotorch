@@ -17,7 +17,7 @@ Vijay Badrinarayanan, Alex Kendall, Roberto Cipolla, Senior Member, IEEE
 
 - ``SegNet`` definition of the SegNet Architecture
 """
-from .layer import *
+from layer import *
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
