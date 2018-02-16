@@ -95,8 +95,8 @@ def tensor_ConcatFromList(ds : List[torch.Tensor],
 
     return _storage
 
-def transform_tensor(inputs : torch.Tensor,
-                     transformation : Callable) -> torch.Tensor:
+def transform_tensor(in_ : torch.Tensor,
+                     trans : Callable) -> torch.Tensor:
     """Function performing torch.Tensor transformation
 
     Parameters
@@ -108,26 +108,27 @@ def transform_tensor(inputs : torch.Tensor,
         Callable collection made from PyTorch Compose function
 
     Example:
-    >>> in = torch.Tensor(2x3x10x10)
-    >>> trans = transforms.Compose([
+    in = torch.Tensor(2x3x10x10)
+    trans = transforms.Compose([
                         transforms.CenterCrop(10),
                         transforms.ToTensor(),
                         ])
 
-    >>> transformed_Tensor = transform_tensor(int, trans)
+    transformed_Tensor = transform_tensor(int, trans)
 
     Returns
     -------
     _out : torch.Tensor
         The resulting Tensor transformed
     """
-    endx = list(inputs.size())[0]
+    endx = len(in_)
 
-    _storage = [torchvision.transforms.ToPILImage[inputs[indx]]
-                for indx in range(endx)]
+    inter_trans = torchvision.transforms.Compose([
+        torchvision.transforms.ToPILImage(),])
 
-    _out = [transformation(_storage[indy])
-            for indy in range(len(_storage))]
+    _storage = [inter_trans(in_[indx]) for indx in range(endx)]
+
+    _out = [trans(_storage[indy]) for indy in range(len(_storage))]
 
 
     return torch.stack(_out)
