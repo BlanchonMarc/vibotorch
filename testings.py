@@ -7,7 +7,9 @@ inputs = ['train/', 'val/', 'test/']
 checkings = ['trainannot/', 'valannot/', 'testannot/']
 Db = DatabaseTorch(root=root_dataset, train_folders=inputs, test_folders=checkings)
 
-data_dict = Db(batch_size = 3, shuffle = False, num_workers = 1)
+data_dict = Db(batch_size = 1, shuffle = False, num_workers = 1)
+
+print(data_dict['train'].size())
 
 # print(data_dict['train'])
 
