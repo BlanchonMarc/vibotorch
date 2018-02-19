@@ -19,62 +19,93 @@ class ImageFolderSegmentation(Dataset):
         ----------
         root : str
             Root folder containing the segmentation data.
-        images : str, default='images'
-            Name of the folder containing input images_root
-        imagext : str, default='png'
-            Extensions of the images contained in the images folder
-        imageconv : str, default='RGB'
-            Conversion color space for inputs
-        labels : str, default='images'
-            Name of the folder containing input labels_root
-        labelsext : str, default='png'
-            Extensions of the images contained in the labels folder
-        labelsconv : str, default='P'
-            Conversion color space for labels
+        images_path : str
+            path of the images with selector
+            image_path = '/image/*.png'
+        label_path : str
+            path of the labals with selector
+        conversion : str
+            conversion for input images
+        transform : Composed Transformation
+            transformation applied on input images
+        label_transform : Composed Transformation
+            transformation applied on label images
 
         Attributes
         ----------
-        images_root : List[str]
-            Images names with full path
-        labels_root : List[str]
-            Labels names with full path
-        ext : List[str]
-            Extansion List
-        conv: List[str]
-            Conversion List
+        image_filenames : list of str
+            images names with full path
+        label_filenames : list of str
+            label names with full path
+        conv: list of str
+            conversion List
+
+        Examples
+        --------
+
+        >>> from dataloaderSegmentation import ImageFolderSegmentation
+        >>> image_path = '/image/*.png'
+        >>> label_path = '/label/*.png'
+        >>> data = ImageFolderSegmentation(image_path=image_path,
+        ...                                label_path=label_path)
+
+
     """
 
-    def __init__(self, root,
-                 images='images', imagext='png', imageconv='RGB',
-                 labels='labels', labelsext='png', labelsconv='P'):
+    def __init__(self, images_path, label_path, conversion='RGB',
+                 transform=None,
+                 label_transform=None):
 
-        images_root = os.path.join(root, images + '/*.' + imagext)
-        labels_root = os.path.join(root, labels + '/*.' + labelsext)
+        self.image_filenames = sorted(glob.glob(images_path))
+        self.label_filenames = sorted(glob.glob(label_path))
 
-        self.image_filenames = sorted(glob.glob(images_root))
-        self.label_filenames = sorted(glob.glob(labels_root))
-
-        self.ext = [imagext, labelsext]
-        self.conv = [imageconv, labelsconv]
+        self.conversion = conversion
 
         if not all([self._get_filename(imf) == self._get_filename(lf)
                     for imf, lf in zip(self.image_filenames,
                                        self.label_filenames)]):
                 raise ValueError(
-                    'Image names in Images and labels have to be identical')
+                    'Image names in Images and label have to be identical')
+        self.transform = transform
+        self.label_transform = label_transform
 
     def _get_filename(self, path):
         return os.path.basename(os.path.splitext(path)[0])
 
+    @staticmethod
+    def _pil_loader(path, conversion=None):
+        with open(path, 'rb') as f:
+            if conversion is not None:
+                return Image.open(f).convert(conversion)
+            else:
+                return Image.open(f).convert('P')
+
     def __getitem__(self, index):
         '''Get an image and a label'''
-        with open(self.image_filenames[index], 'rb') as f:
-            image = Image.open(f).convert(self.conv[0])
 
-        with open(self.label_filenames[index], 'rb') as f:
-            labels = Image.open(f).convert(self.conv[1])
+        image = _pil_loader(self.image_filenames[index])
+        label = _pil_loader(self.label_filenames[index])
 
-        return image, labels
+        if self.transform is not None:
+            image = self.transform(image)
+        if self.label_transform is not None:
+            label = self.label_transform(label)
+
+        return image, label
 
     def __len__(self):
         return len(self.image_filenames)
+
+    def __repr__(self):
+        fmt_str = 'Dataset ' + self.__class__.__name__ + '\n'
+        fmt_str += '    Number of datapoints: {}\n'.format(self.__len__())
+        fmt_str += '    Root Location: {}\n'.format(self.root)
+        tmp = '    Transforms (if any): '
+        fmt_str += '{0}{1}\n'.format(tmp,
+                                     self.transform.__repr__().replace(
+                                         '\n', '\n' + ' ' * len(tmp)))
+        tmp = '    Label Transforms (if any): '
+        fmt_str += '{0}{1}'.format(tmp,
+                                   self.label_transform.__repr__().replace(
+                                       '\n', '\n' + ' ' * len(tmp)))
+        return fmt_str
