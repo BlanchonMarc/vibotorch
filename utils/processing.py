@@ -40,9 +40,8 @@ from typing import Dict, List, Callable
 from PIL import Image
 import torchvision
 
-def tensor_ConcatFromDict(ds : Dict[str, torch.Tensor],
-                          inds : List[str],
-                          dim : int = 0) -> torch.Tensor:
+
+def tensor_ConcatFromDict(ds, inds, dim=0):
     """Function performing torch.Tensor Concatenation
 
     Parameters
@@ -64,14 +63,13 @@ def tensor_ConcatFromDict(ds : Dict[str, torch.Tensor],
     # the storer
     _storage = ds[inds[0]]
     # the update / concatenation
-    for indx in range(1,len(inds)):
+    for indx in range(1, len(inds)):
         torch.cat((_storage, ds[inds[indx]]), dim)
 
     return _storage
 
 
-def tensor_ConcatFromList(ds : List[torch.Tensor],
-                          dim : int = 0) -> torch.Tensor:
+def tensor_ConcatFromList(ds, dim=0):
     """Function performing torch.Tensor Concatenation
 
     Parameters
@@ -90,13 +88,13 @@ def tensor_ConcatFromList(ds : List[torch.Tensor],
     # the storer
     _storage = ds[0]
     # the update / concatenation
-    for indx in range(1,len(ds)):
+    for indx in range(1, len(ds)):
         torch.cat((_storage, ds[indx]), dim)
 
     return _storage
 
-def transform_tensor(in_ : torch.Tensor,
-                     trans : Callable) -> torch.Tensor:
+
+def transform_tensor(in_, trans):
     """Function performing torch.Tensor transformation
 
     Parameters
@@ -124,11 +122,10 @@ def transform_tensor(in_ : torch.Tensor,
     endx = len(in_)
 
     inter_trans = torchvision.transforms.Compose([
-        torchvision.transforms.ToPILImage(),])
+        torchvision.transforms.ToPILImage(), ])
 
     _storage = [inter_trans(in_[indx]) for indx in range(endx)]
 
     _out = [trans(_storage[indy]) for indy in range(len(_storage))]
-
 
     return torch.stack(_out)

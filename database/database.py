@@ -12,7 +12,6 @@ The module structure is the following:
   into torch.Tensor format
 """
 
-from typing import List, Dict
 from timeit import default_timer as timer
 import glob
 import os
@@ -23,7 +22,7 @@ from torchvision import datasets, models, transforms
 
 class DatabaseLoader:
     """Abstract Base Class to ensure the optimal quantity of functions."""
-    def __init__(self) -> None:
+    def __init__(self):
         """Default __init__ to optimize the number of saved arguments"""
         self.root = ''
         self.train_folders = ''
@@ -33,14 +32,14 @@ class DatabaseLoader:
         self.output = {}
         self.time = None
 
-    def __call__(self) -> Dict[str, torch.Tensor]:
+    def __call__(self):
         """Default __call__ returning the converted dataset """
         raise NotImplementedError
 
-    def _to_tensor(self, inds : int, inde : int,
-                   ds : List[torch.Tensor]) -> torch.Tensor:
-       """Default private function to step-wise process data """
-       raise NotImplementedError
+    def _to_tensor(self, inds, inde,
+                   ds):
+        """Default private function to step-wise process data """
+        raise NotImplementedError
 
 
 class DatabaseTorch(DatabaseLoader):
@@ -71,10 +70,10 @@ class DatabaseTorch(DatabaseLoader):
         The string corresponding to the extansion of the dataset
         Commonly "png", "jpg", "tiff" ...
     """
-    def __init__(self, root : str, train_folders : List[str],
-                 test_folders : List[str], ext : str = 'png') -> None:
+    def __init__(self, root, train_folders,
+                 test_folders, ext='png'):
         '''Initialization throwing errors for incorrect/incoherent parameters'''
-        super().__init__()
+        super(DatabaseTorch, self).__init__()
         if os.path.isdir(root):
             self.root = root
         else:
@@ -98,14 +97,14 @@ class DatabaseTorch(DatabaseLoader):
                 'Incorrect path for validation folders selection')
         else:
             self.test_folders = test_folders
-        #Extract the # of files in folders as list in alphabetical
-        #order from the folder names
+        # Extract the # of files in folders as list in alphabetical
+        # order from the folder names
         self.sizes = [len(glob.glob1(root + next(
-                    os.walk(root))[1][x] + '/', "*."+ ext))
-                    for x in range(len(next(os.walk(root))[1]))]
+            os.walk(root))[1][x] + '/', "*." + ext))
+            for x in range(len(next(os.walk(root))[1]))]
 
         if not len(next(os.walk(root))[1]) == len(
-            train_folders + test_folders):
+                train_folders + test_folders):
             raise AttributeError('#folder in ' + root + ' = ' + str(len(
                 next(os.walk(root))[1])) + ' while #folder as input = ' + str(
                     len(self.train_folders + self.test_folders)))
@@ -113,10 +112,9 @@ class DatabaseTorch(DatabaseLoader):
         self.output = {}
         self.time = timer()
 
-
-    def __call__(self, batch_size : int = 1,
-                 shuffle : bool = False,
-                 num_workers : int = 4) -> Dict[str, torch.Tensor]:
+    def __call__(self, batch_size=1,
+                 shuffle=False,
+                 num_workers=4):
         """Process the data at call after initialization.
 
         Parameters
@@ -136,61 +134,60 @@ class DatabaseTorch(DatabaseLoader):
         """
 
         parent_folder = self.root.split('/')[len(
-            self.root.split('/'))-2] + '/'
-        newroot = self.root.replace( parent_folder, '')
-        #create a dataset of images converted to Tensor from Folders
+            self.root.split('/')) - 2] + '/'
+        newroot = self.root.replace(parent_folder, '')
+        # create a dataset of images converted to Tensor from Folders
         image_datasets = {x: datasets.ImageFolder(os.path.join(
-            newroot, x),transforms.ToTensor()) for x in [parent_folder]}
+            newroot, x), transforms.ToTensor()) for x in [parent_folder]}
 
         dataset_sizes = [len(image_datasets[x]) for x in [parent_folder]]
 
-        #usage of dataloader to adopt the possibility of multi threading
+        # usage of dataloader to adopt the possibility of multi threading
         tmp_dataloaders = [torch.utils.data.DataLoader(
-                                image_datasets[parent_folder][ind][0],
-                                batch_size=batch_size,
-                                shuffle=shuffle,
-                                num_workers=num_workers)
-                           for ind in range(sum(dataset_sizes))]
+            image_datasets[parent_folder][ind][0],
+            batch_size=batch_size,
+            shuffle=shuffle,
+            num_workers=num_workers)
+            for ind in range(sum(dataset_sizes))]
 
         if not sum(self.sizes) == dataset_sizes[0]:
             raise NotImplementedError
 
-        #sort the name of folders to fit the sizes in self.sizes
+        # sort the name of folders to fit the sizes in self.sizes
         temporary_folders = sorted(self.train_folders + self.test_folders)
 
-        #for each folders and size, convert to tensor and push in dict
+        # for each folders and size, convert to tensor and push in dict
         inds = 0
-        for key, conc in enumerate(zip(temporary_folders,self.sizes)):
+        for key, conc in enumerate(zip(temporary_folders, self.sizes)):
             inde = inds + conc[1]
             _conc = conc[0].replace('/', '')
-            self.output[_conc] = self._to_tensor(inds = inds,
-                                                 inde = inde,
-                                                 ds = tmp_dataloaders)
+            self.output[_conc] = self._to_tensor(inds=inds,
+                                                 inde=inde,
+                                                 ds=tmp_dataloaders)
             inds = inde
         print('Data Loaded - Time Elapsed: ' + str(
             timer() - self.time) + 's')
         return self.output
 
-    def _to_tensor(self, inds : int, inde : int,
-                   ds : List[torch.Tensor]) -> torch.Tensor:
-       """Convert a dictionnary of toch.Tensor into a toch.Tensor.
+    def _to_tensor(self, inds, inde, ds):
+        """Convert a dictionnary of toch.Tensor into a toch.Tensor.
 
-       Sub-divide a dictionnary into a tensor considering sizes predefined.
+        Sub-divide a dictionnary into a tensor considering sizes predefined.
 
-       Parameters
-       ---------
-       inds : int
-           The starting index.
+        Parameters
+        ---------
+        inds : int
+            The starting index.
 
-       inds : bool
-           The ending index.
+        inds : bool
+            The ending index.
 
-       ds: List[dataloaders]
-           The list to sub-divide.
+        ds: List[dataloaders]
+            The list to sub-divide.
 
-       Returns
-       -------
-       output : torch.Tensor
-       """
-       return torch.stack([next(iter(ds[indx]))
+        Returns
+        -------
+        output : torch.Tensor
+        """
+       return torch.stack([next(iter(ds[indx])) \
                            for indx in range(inds,inde)])
