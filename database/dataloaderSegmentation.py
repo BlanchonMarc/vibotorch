@@ -68,10 +68,10 @@ class ImageFolderSegmentation(Dataset):
 
     def __getitem__(self, index):
         '''Get an image and a label'''
-        with open(image_filenames[index], 'rb') as f:
+        with open(self.image_filenames[index], 'rb') as f:
             image = Image.open(f).convert(self.conv[0])
 
-        with open(label_filenames[index], 'rb') as f:
+        with open(self.label_filenames[index], 'rb') as f:
             labels = Image.open(f).convert(self.conv[1])
 
         return image, labels
