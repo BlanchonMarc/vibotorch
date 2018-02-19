@@ -47,21 +47,23 @@ class ImageFolderSegmentation(Dataset):
     def __init__(self, root,
                  images='images', imagext='png', imageconv='RGB',
                  labels='labels', labelsext='png', labelsconv='P'):
-        images_root = os.path.join(root, images)
-        labels_root = os.path.join(root, labels)
 
-        self.image_filenames = sorted(glob.glob(self.images_root))
-        self.label_filenames = sorted(glob.glob(self.labels_root))
+        images_root = os.path.join(root, images + '/*.' + imagext)
+        labels_root = os.path.join(root, labels + '/*.' + labelsext)
+
+        self.image_filenames = sorted(glob.glob(images_root))
+        self.label_filenames = sorted(glob.glob(labels_root))
 
         self.ext = [imagext, labelsext]
         self.conv = [imageconv, labelsconv]
 
-        if not all([_get_filename(imf) == _get_filename(lf)
-                    for imf, lf in zip(image_filenames, label_filenames)]):
-                raise ValueError('''Image names in Images and
-                                 labelss have to be identical''')
+        if not all([self._get_filename(imf) == self._get_filename(lf)
+                    for imf, lf in zip(self.image_filenames,
+                                       self.label_filenames)]):
+                raise ValueError(
+                    'Image names in Images and labels have to be identical')
 
-    def _get_filename(path):
+    def _get_filename(self, path):
         return os.path.basename(os.path.splitext(path)[0])
 
     def __getitem__(self, index):
