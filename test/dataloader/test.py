@@ -130,7 +130,7 @@ valloader = torch.utils.data.DataLoader(var2, batch_size=3,
 # plt.show()
 # plt.close(fig)
 
-running_metrics = runningScore(n_classes=21)
+# running_metrics = runningScore(n_classes=21)
 model = SegNet(in_channels=3, n_classes=22)
 model = torch.nn.DataParallel(model,
                               device_ids=range(torch.cuda.device_count()))
@@ -161,6 +161,7 @@ for epoch in range(500):
         loss = criterion(F.log_softmax(outputs, dim=1), targets[:, 0])
         loss.backward()
         optimizer.step()
+        print('step: ' + step)
 
         # print statistics
         running_loss = loss.data[0]
