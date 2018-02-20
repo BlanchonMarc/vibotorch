@@ -7,7 +7,7 @@ import numpy as np
 from dataloaderSegmentation import ImageFolderSegmentation
 from torchvision.transforms import Compose, CenterCrop, Normalize
 from torchvision.transforms import ToTensor, ToPILImage
-from nn import SegNet
+from nn import Segmodel
 from torch import nn
 import torch.nn.functional as F
 import torch.optim as optim
@@ -131,7 +131,7 @@ valloader = torch.utils.data.DataLoader(var2, batch_size=3,
 # plt.close(fig)
 
 running_metrics = runningScore(n_classes=22)
-model = SegNet()
+model = Segmodel()
 model = torch.nn.DataParallel(model,
                               device_ids=range(torch.cuda.device_count()))
 model.cuda()
@@ -157,7 +157,7 @@ for ep in epochs:
                 optimizer.zero_grad()
 
                 # forward + backward + optimize
-                outputs = net(inputs)
+                outputs = model(inputs)
                 loss = criterion(outputs, labels[:, 0])
                 loss.backward()
                 optimizer.step()
