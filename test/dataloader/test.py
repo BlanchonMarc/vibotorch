@@ -49,7 +49,7 @@ label_transform = Compose([
 
 image_path = '/data/scene_segmentation/CamVid/train/*.png'
 
-label_path = '/ata/scene_segmentation/CamVid/trainannot/*.png'
+label_path = '/data/scene_segmentation/CamVid/trainannot/*.png'
 
 var = ImageFolderSegmentation(images_path=image_path,
                               label_path=label_path,
@@ -166,7 +166,7 @@ for ep in epochs:
                     print("Epoch [%d/%d] Loss: %.4f" % (epoch + 1,
                                                         ep,
                                                         loss.data[0]))
-	    print('Finished Training')
+            print('Finished Training')
             model.eval()
 
             for i_val, (images_val,
@@ -180,8 +180,7 @@ for ep in epochs:
                 running_metrics.update(groundtruth, pred)
             score, class_iou = running_metrics.get_scores()
             for k, v in score.items():
-                pass
-		# print(k, v)
+                print(k, v)
             running_metrics.reset()
 
             if score['Mean IoU : \t'] >= best_iou:
