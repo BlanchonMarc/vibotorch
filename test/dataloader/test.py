@@ -193,5 +193,5 @@ for ep in epochs:
                 torch.save(state,
                            "{}_{}_{}_{}_best_model.pkl".format('segnet',
                                                                'Camvid',
-                                                               str(epoch + '/' + ep),
+                                                               str(epoch) + '/' + str(ep),
                                                                str(lr)))
