@@ -131,55 +131,43 @@ valloader = torch.utils.data.DataLoader(var2, batch_size=3,
 # plt.close(fig)
 
 running_metrics = runningScore(n_classes=21)
-model = SegNet()
+model = SegNet(in_channels=3, n_classes=22)
 model = torch.nn.DataParallel(model,
                               device_ids=range(torch.cuda.device_count()))
 model.cuda()
-epochs = [200, 500]
-lrs = [0.01, 0.001]
-best_iou = -100.0
-criterion = nn.CrossEntropyLoss()
 
-optimizer = optim.SGD(model.parameters(), lr=lrs[1], momentum=0.9)
+weight = torch.ones(n_classes)
+weight[0] = 0
 
-for epoch in range(epochs[1]):  # loop over the dataset multiple times
-    model.train()
-    for i, (images, labels) in enumerate(trainloader):
-        images = Variable(images.cuda())
-        labels = Variable(labels.cuda())
+criterion = nn.NLLLoss2d(weight)
+optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+
+cuda_activated = True
+
+for epoch in range(2):
+    running_loss = 0.0
+    for step, (images, targets) in enumerate(loader):
+        if cuda_activated:
+            images = images.cuda()
+            labels = labels.cuda()
+
+        images = autograd.Variable(images)
+        targets = autograd.Variable(targets)
 
         optimizer.zero_grad()
+
         outputs = model(images)
 
-        loss = loss_fn(input=outputs, target=labels[:, 0])
-
+        loss = criterion(F.log_softmax(outputs, dim=1), targets[:, 0])
         loss.backward()
         optimizer.step()
 
-        if (i + 1) % 10 == 0:
-            print("Epoch [%d/%d] Loss: %.4f" % (epoch + 1,
-                                                epochs[1],
-                                                loss.data[0]))
+        # print statistics
+        running_loss = loss.data[0]
+        print(running_loss)
+        if step % 20 == 19:    # print every 2000 mini-batches
+            print('[%d, %5d] loss: %.3f' %
+                  (epoch + 1, step + 1, running_loss / 20))
+            running_loss = 0.0
 
-    model.eval()
-    for i_val, (images_val, labels_val) in enumerate(valloader):
-        images_val = Variable(images_val.cuda(), volatile=True)
-        labels_val = Variable(labels_val.cuda(), volatile=True)
-        outputs = model(images_val)
-        pred = outputs.data.max(1)[1].cpu().numpy()
-        gt = labels_val.data.cpu().numpy()
-        running_metrics.update(gt, pred)
-
-    score, class_iou = running_metrics.get_scores()
-    for k, v in score.items():
-        pass
-        # print(k, v)
-    running_metrics.reset()
-
-    if score['Mean IoU : \t'] >= best_iou:
-        best_iou = score['Mean IoU : \t']
-        state = {'epoch': epoch + 1,
-                 'model_state': model.state_dict(),
-                 'optimizer_state': optimizer.state_dict(), }
-        torch.save(state,
-                   "{}_{}_best_model.pkl".format(args.arch, args.dataset))
+print('Finished Training')
