@@ -162,25 +162,25 @@ for epoch in range(epochs[1]):  # loop over the dataset multiple times
                                                 loss.data[0]))
 
     model.eval()
-    for i_val, (images_val, labels_val) in tqdm(enumerate(valloader)):
+    for i_val, (images_val, labels_val) in enumerate(valloader):
         images_val = Variable(images_val.cuda(), volatile=True)
         labels_val = Variable(labels_val.cuda(), volatile=True)
 
         outputs = model(images_val)
         pred = outputs.data.max(1)[1].cpu().numpy()
         gt = labels_val.data.cpu().numpy()
-        running_metrics.update(gt, pred)
-
-    score, class_iou = running_metrics.get_scores()
-    for k, v in score.items():
-        pass
-        # print(k, v)
-    running_metrics.reset()
-
-    if score['Mean IoU : \t'] >= best_iou:
-        best_iou = score['Mean IoU : \t']
-        state = {'epoch': epoch + 1,
-                 'model_state': model.state_dict(),
-                 'optimizer_state': optimizer.state_dict(), }
-        torch.save(state,
-                   "{}_{}_best_model.pkl".format(args.arch, args.dataset))
+    #     running_metrics.update(gt, pred)
+    #
+    # score, class_iou = running_metrics.get_scores()
+    # for k, v in score.items():
+    #     pass
+    #     # print(k, v)
+    # running_metrics.reset()
+    #
+    # if score['Mean IoU : \t'] >= best_iou:
+    #     best_iou = score['Mean IoU : \t']
+    #     state = {'epoch': epoch + 1,
+    #              'model_state': model.state_dict(),
+    #              'optimizer_state': optimizer.state_dict(), }
+    #     torch.save(state,
+    #                "{}_{}_best_model.pkl".format(args.arch, args.dataset))
