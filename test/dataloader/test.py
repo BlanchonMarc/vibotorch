@@ -34,44 +34,6 @@ class relabel:
         _input[_input == self.olabel] = self.nlabel
         return _input
 
-
-transform = Compose([
-    CenterCrop(256),
-    ToTensor(),
-    Normalize([.5, .5, .5], [.5, .5, .5]),
-])
-label_transform = Compose([
-    CenterCrop(256),
-    to_label(),
-    relabel(255, 21),
-])
-
-
-image_path = '/data/scene_segmentation/CamVid/train/*.png'
-
-label_path = '/data/scene_segmentation/CamVid/trainannot/*.png'
-
-var = ImageFolderSegmentation(images_path=image_path,
-                              label_path=label_path,
-                              transform=transform,
-                              label_transform=label_transform)
-
-trainloader = torch.utils.data.DataLoader(var, batch_size=3,
-                                          shuffle=False, num_workers=10)
-
-
-image_path = '/data/scene_segmentation/CamVid/val/*.png'
-
-label_path = '/data/scene_segmentation/CamVid/valannot/*.png'
-
-var2 = ImageFolderSegmentation(images_path=image_path,
-                               label_path=label_path,
-                               transform=transform,
-                               label_transform=transform)
-
-valloader = torch.utils.data.DataLoader(var, batch_size=3,
-                                        shuffle=False, num_workers=10)
-
 class runningScore(object):
 
     def __init__(self, n_classes):
@@ -119,6 +81,44 @@ class runningScore(object):
         self.confusion_matrix = np.zeros((self.n_classes, self.n_classes))
 
 
+transform = Compose([
+    CenterCrop(256),
+    ToTensor(),
+    Normalize([.5, .5, .5], [.5, .5, .5]),
+])
+label_transform = Compose([
+    CenterCrop(256),
+    to_label(),
+    relabel(255, 21),
+])
+
+
+image_path = '/data/scene_segmentation/CamVid/train/*.png'
+
+label_path = '/data/scene_segmentation/CamVid/trainannot/*.png'
+
+var = ImageFolderSegmentation(images_path=image_path,
+                              label_path=label_path,
+                              transform=transform,
+                              label_transform=label_transform)
+
+trainloader = torch.utils.data.DataLoader(var, batch_size=3,
+                                          shuffle=False, num_workers=10)
+
+
+image_path2 = '/data/scene_segmentation/CamVid/val/*.png'
+
+label_path2 = '/data/scene_segmentation/CamVid/valannot/*.png'
+
+var2 = ImageFolderSegmentation(images_path=image_path2,
+                               label_path=label_path2,
+                               transform=transform,
+                               label_transform=label_transform)
+
+valloader = torch.utils.data.DataLoader(var, batch_size=3,
+                                        shuffle=False, num_workers=10)
+
+
 # # get some random training images
 # dataiter = iter(trainloader)
 # images, labels = dataiter.next()
@@ -132,62 +132,54 @@ class runningScore(object):
 
 running_metrics = runningScore(n_classes=21)
 model = SegNet()
-model = torch.nn.DataParallel(model, device_ids=range(torch.cuda.device_count()))
+model = torch.nn.DataParallel(model,
+                              device_ids=range(torch.cuda.device_count()))
 model.cuda()
 epochs = [200, 500]
 lrs = [0.01, 0.001]
 best_iou = -100.0
 criterion = nn.CrossEntropyLoss()
-for ep in epochs:
 
-    for lr in lrs:
-        optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9)
+optimizer = optim.SGD(model.parameters(), lr=lrs[1], momentum=0.9)
 
-        for epoch in range(ep):  # loop over the dataset multiple times
-            model.train()
-            for i, data in enumerate(trainloader, 0):
-                # get the inputs
-                inputs, labels = data
+for epoch in range(epochs[1]):  # loop over the dataset multiple times
+    model.train()
+    for i, (images, labels) in enumerate(trainloader):
+        images = Variable(images.cuda())
+        labels = Variable(labels.cuda())
 
-                # wrap them in Variable
-                inputs, labels = Variable(inputs.cuda()), Variable(labels.cuda())
+        optimizer.zero_grad()
+        outputs = model(images)
 
-                # zero the parameter gradients
-                optimizer.zero_grad()
+        loss = loss_fn(input=outputs, target=labels[:, 0])
 
-                # forward + backward + optimize
-                outputs = net(inputs)
-                loss = criterion(outputs, labels[:, 0])
-                loss.backward()
-                optimizer.step()
+        loss.backward()
+        optimizer.step()
 
-                # print statistics
-                if i % 20 == 0:    # print every 20 mini-batches
-                    print("Epoch [%d/%d] Loss: %.4f" % (epoch + 1,
-                                                        ep,
-                                                        loss.data[0]))
-            print('Finished Training')
-            model.eval()
+        if (i + 1) % 20 == 0:
+            print("Epoch [%d/%d] Loss: %.4f" % (epoch + 1,
+                                                epochs[1],
+                                                loss.data[0]))
 
-            for i_val, (images_val,
-                        labels_val) in tqdm(enumerate(valloader)):
-                images_val = Variable(images_val.cuda(), volatile=True)
-                labels_val = Variable(labels_val.cuda(), volatile=True)
+    model.eval()
+    for i_val, (images_val, labels_val) in tqdm(enumerate(valloader)):
+        images_val = Variable(images_val.cuda(), volatile=True)
+        labels_val = Variable(labels_val.cuda(), volatile=True)
 
-                outputs = model(images_val)
-                pred = outputs.data.max(1)[1].cpu().numpy()
-                groundtruth = labels_val.data.cpu().numpy()
-                running_metrics.update(groundtruth, pred)
-            score, class_iou = running_metrics.get_scores()
-            for k, v in score.items():
-                print(k, v)
-            running_metrics.reset()
+        outputs = model(images_val)
+        pred = outputs.data.max(1)[1].cpu().numpy()
+        gt = labels_val.data.cpu().numpy()
+        running_metrics.update(gt, pred)
 
-            if score['Mean IoU : \t'] >= best_iou:
-                best_iou = score['Mean IoU : \t']
-                state = {'epoch': epoch + 1,
-                         'model_state': model.state_dict(),
-                         'optimizer_state': optimizer.state_dict(), }
-                torch.save(state,
-                           "{}_{}_best_model.pkl".format(args.arch,
-                                                         args.dataset))
+    score, class_iou = running_metrics.get_scores()
+    for k, v in score.items():
+        print(k, v)
+    running_metrics.reset()
+
+    if score['Mean IoU : \t'] >= best_iou:
+        best_iou = score['Mean IoU : \t']
+        state = {'epoch': epoch + 1,
+                 'model_state': model.state_dict(),
+                 'optimizer_state': optimizer.state_dict(), }
+        torch.save(state,
+                   "{}_{}_best_model.pkl".format(args.arch, args.dataset))
