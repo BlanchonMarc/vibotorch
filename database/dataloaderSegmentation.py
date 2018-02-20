@@ -72,8 +72,7 @@ class ImageFolderSegmentation(Dataset):
     def _get_filename(self, path):
         return os.path.basename(os.path.splitext(path)[0])
 
-    @staticmethod
-    def _pil_loader(path, conversion=None):
+    def _pil_loader(self, path, conversion=None):
         with open(path, 'rb') as f:
             if conversion is not None:
                 return Image.open(f).convert(conversion)
@@ -83,8 +82,9 @@ class ImageFolderSegmentation(Dataset):
     def __getitem__(self, index):
         '''Get an image and a label'''
 
-        image = _pil_loader(self.image_filenames[index])
-        label = _pil_loader(self.label_filenames[index])
+        image = self._pil_loader(path=self.image_filenames[index],
+                                 conversion='RGB')
+        label = self._pil_loader(path=self.label_filenames[index])
 
         if self.transform is not None:
             image = self.transform(image)
@@ -99,7 +99,6 @@ class ImageFolderSegmentation(Dataset):
     def __repr__(self):
         fmt_str = 'Dataset ' + self.__class__.__name__ + '\n'
         fmt_str += '    Number of datapoints: {}\n'.format(self.__len__())
-        fmt_str += '    Root Location: {}\n'.format(self.root)
         tmp = '    Transforms (if any): '
         fmt_str += '{0}{1}\n'.format(tmp,
                                      self.transform.__repr__().replace(

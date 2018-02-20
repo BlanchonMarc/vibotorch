@@ -27,7 +27,7 @@ from torch import autograd, optim
 
 class NeuralNetwork(nn.Module):
     """Abstract Base Class to ensure the optimal quantity of functions."""
-    def __init__(self):
+    def __init__(self, in_channels, n_classes):
         super(NeuralNetwork, self).__init__()
         pass
 
@@ -35,7 +35,7 @@ class NeuralNetwork(nn.Module):
         pass
 
 
-class SegNet(NeuralNetwork):
+class SegNet(nn.Module):
     """Derived Class to define a Segnet Architecture of NN
 
     Attributes
@@ -52,9 +52,9 @@ class SegNet(NeuralNetwork):
     for Image Segmentation
     Vijay Badrinarayanan, Alex Kendall, Roberto Cipolla, Senior Member, IEEE,
     """
-    def __init__(self, in_channels, n_classes):
+    def __init__(self, in_channels=3, n_classes=21):
         """Sequential Instanciation of the different Layers"""
-        super(SegNet, self).__init__(in_channels, n_classes)
+        super(SegNet, self).__init__()
 
         self.layer_1 = SegnetLayer_Encoder(in_channels, 64, 2)
         self.layer_2 = SegnetLayer_Encoder(64, 128, 2)

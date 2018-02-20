@@ -41,7 +41,7 @@ class Layer(nn.Module):
         pass
 
 
-class SegnetLayer_Decoder(Layer):
+class SegnetLayer_Decoder(nn.Module):
     """Derived Class to define a Decoder Layer of Segnet Architecture
 
     Attributes
@@ -62,9 +62,7 @@ class SegnetLayer_Decoder(Layer):
     Vijay Badrinarayanan, Alex Kendall, Roberto Cipolla, Senior Member, IEEE,
     """
     def __init__(self, in_size, out_size, layer_size):
-        super(SegnetLayer_Decoder, self).__init__(in_size,
-                                                  out_size,
-                                                  layer_size)
+        super(SegnetLayer_Decoder, self).__init__()
         if layer_size == 2:
             self.unpool = nn.MaxUnpool2d(2, 2)
             self.conv1 = conv2DBatchNormRelu(in_size, in_size, 3, 1, 1)
@@ -93,7 +91,7 @@ class SegnetLayer_Decoder(Layer):
         return outputs
 
 
-class SegnetLayer_Encoder(Layer):
+class SegnetLayer_Encoder(nn.Module):
     """Derived Class to define an Encoder Layer of Segnet Architecture
 
     Attributes
@@ -114,9 +112,7 @@ class SegnetLayer_Encoder(Layer):
     Vijay Badrinarayanan, Alex Kendall, Roberto Cipolla, Senior Member, IEEE,
     """
     def __init__(self, in_size, out_size, layer_size):
-        super(SegnetLayer_Encoder, self).__init__(in_size,
-                                                  out_size,
-                                                  layer_size)
+        super(SegnetLayer_Encoder, self).__init__()
 
         if layer_size == 2:
             self.conv1 = conv2DBatchNormRelu(in_size, out_size, 3, 1, 1)
@@ -145,7 +141,7 @@ class SegnetLayer_Encoder(Layer):
         return outputs, indices, unpooled_shape
 
 
-class conv2DBatchNormRelu(Layer):
+class conv2DBatchNormRelu(nn.Module):
     """Derived Class to define an Encoder Layer of Segnet Architecture
 
     Attributes
@@ -173,14 +169,11 @@ class conv2DBatchNormRelu(Layer):
 
     """
     def __init__(self, in_channels,
-                n_filters, k_size,
-                stride, padding, bias=True,
-                dilation=1):
+                 n_filters, k_size,
+                 stride, padding, bias=True,
+                 dilation=1):
         """Preprocessing the Sequence"""
-        super(conv2DBatchNormRelu, self).__init__(in_channels,
-                                                  n_filters, k_size,
-                                                  stride, padding, bias,
-                                                  dilation)
+        super(conv2DBatchNormRelu, self).__init__()
 
         conv_mod = nn.Conv2d(int(in_channels), int(n_filters),
                              kernel_size=k_size, padding=padding,
