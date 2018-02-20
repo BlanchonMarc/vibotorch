@@ -157,7 +157,11 @@ for ep in epochs:
                 optimizer.zero_grad()
 
                 # forward + backward + optimize
-                outputs = model(inputs)
+                output = model(inputs)
+                output = output.view(output.size(0), output.size(1), -1)
+                output = torch.transpose(output, 1, 2).contiguous()
+                output = output.view(-1, output.size(2))
+                target = target.view(-1)
                 loss = criterion(outputs, labels.view(-1))
                 loss.backward()
                 optimizer.step()
