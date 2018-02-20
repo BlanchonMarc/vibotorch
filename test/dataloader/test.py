@@ -93,9 +93,9 @@ label_transform = Compose([
 ])
 
 
-image_path = '/data/scene_segmentation/CamVid/train/*.png'
+image_path = '../../../../data/scene_segmentation/CamVid/train/*.png'
 
-label_path = '/data/scene_segmentation/CamVid/trainannot/*.png'
+label_path = '../../../../data/scene_segmentation/CamVid/trainannot/*.png'
 
 var = ImageFolderSegmentation(images_path=image_path,
                               label_path=label_path,
@@ -106,9 +106,9 @@ trainloader = torch.utils.data.DataLoader(var, batch_size=3,
                                           shuffle=False, num_workers=10)
 
 
-image_path2 = '/data/scene_segmentation/CamVid/val/*.png'
+image_path2 = '../../../../data/scene_segmentation/CamVid/val/*.png'
 
-label_path2 = '/data/scene_segmentation/CamVid/valannot/*.png'
+label_path2 = '../../../../data/scene_segmentation/CamVid/valannot/*.png'
 
 var2 = ImageFolderSegmentation(images_path=image_path2,
                                label_path=label_path2,
@@ -143,7 +143,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=lrs[1], momentum=0.9)
 
 for epoch in range(epochs[1]):  # loop over the dataset multiple times
-    model.train()
+    # model.train()
     for i, (images, labels) in enumerate(trainloader):
         images = Variable(images.cuda())
         labels = Variable(labels.cuda())
@@ -156,7 +156,7 @@ for epoch in range(epochs[1]):  # loop over the dataset multiple times
         loss.backward()
         optimizer.step()
 
-        if (i + 1) % 20 == 0:
+        if (i + 1) % 10 == 0:
             print("Epoch [%d/%d] Loss: %.4f" % (epoch + 1,
                                                 epochs[1],
                                                 loss.data[0]))
