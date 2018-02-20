@@ -173,7 +173,8 @@ for epoch in range(epochs[1]):  # loop over the dataset multiple times
 
     score, class_iou = running_metrics.get_scores()
     for k, v in score.items():
-        print(k, v)
+        pass
+        # print(k, v)
     running_metrics.reset()
 
     if score['Mean IoU : \t'] >= best_iou:
