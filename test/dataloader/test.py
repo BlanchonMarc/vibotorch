@@ -136,7 +136,7 @@ model = torch.nn.DataParallel(model,
                               device_ids=range(torch.cuda.device_count()))
 model.cuda()
 
-weight = torch.ones(n_classes)
+weight = torch.ones(22)
 weight[0] = 0
 
 criterion = nn.NLLLoss2d(weight)
