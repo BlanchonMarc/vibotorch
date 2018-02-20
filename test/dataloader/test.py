@@ -93,9 +93,9 @@ label_transform = Compose([
 ])
 
 
-image_path = '../../../../data/scene_segmentation/CamVid/train/*.png'
+image_path = '/data/scene_segmentation/CamVid/train/*.png'
 
-label_path = '../../../../data/scene_segmentation/CamVid/trainannot/*.png'
+label_path = '/data/scene_segmentation/CamVid/trainannot/*.png'
 
 var = ImageFolderSegmentation(images_path=image_path,
                               label_path=label_path,
@@ -115,7 +115,7 @@ var2 = ImageFolderSegmentation(images_path=image_path2,
                                transform=transform,
                                label_transform=label_transform)
 
-valloader = torch.utils.data.DataLoader(var, batch_size=3,
+valloader = torch.utils.data.DataLoader(var2, batch_size=3,
                                         shuffle=False, num_workers=10)
 
 
@@ -143,7 +143,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=lrs[1], momentum=0.9)
 
 for epoch in range(epochs[1]):  # loop over the dataset multiple times
-    # model.train()
+    model.train()
     for i, (images, labels) in enumerate(trainloader):
         images = Variable(images.cuda())
         labels = Variable(labels.cuda())
@@ -161,26 +161,25 @@ for epoch in range(epochs[1]):  # loop over the dataset multiple times
                                                 epochs[1],
                                                 loss.data[0]))
 
-    # model.eval()
-    # for i_val, (images_val, labels_val) in enumerate(valloader):
-    #     images_val = Variable(images_val.cuda(), volatile=True)
-    #     labels_val = Variable(labels_val.cuda(), volatile=True)
-    #
-    #     outputs = model(images_val)
-    #     pred = outputs.data.max(1)[1].cpu().numpy()
-    #     gt = labels_val.data.cpu().numpy()
-    #     running_metrics.update(gt, pred)
-    #
-    # score, class_iou = running_metrics.get_scores()
-    # for k, v in score.items():
-    #     pass
-    #     # print(k, v)
-    # running_metrics.reset()
-    #
-    # if score['Mean IoU : \t'] >= best_iou:
-    #     best_iou = score['Mean IoU : \t']
-    #     state = {'epoch': epoch + 1,
-    #              'model_state': model.state_dict(),
-    #              'optimizer_state': optimizer.state_dict(), }
-    #     torch.save(state,
-    #                "{}_{}_best_model.pkl".format(args.arch, args.dataset))
+    model.eval()
+    for i_val, (images_val, labels_val) in enumerate(valloader):
+        images_val = Variable(images_val.cuda(), volatile=True)
+        labels_val = Variable(labels_val.cuda(), volatile=True)
+        outputs = model(images_val)
+        pred = outputs.data.max(1)[1].cpu().numpy()
+        gt = labels_val.data.cpu().numpy()
+        running_metrics.update(gt, pred)
+
+    score, class_iou = running_metrics.get_scores()
+    for k, v in score.items():
+        pass
+        # print(k, v)
+    running_metrics.reset()
+
+    if score['Mean IoU : \t'] >= best_iou:
+        best_iou = score['Mean IoU : \t']
+        state = {'epoch': epoch + 1,
+                 'model_state': model.state_dict(),
+                 'optimizer_state': optimizer.state_dict(), }
+        torch.save(state,
+                   "{}_{}_best_model.pkl".format(args.arch, args.dataset))
