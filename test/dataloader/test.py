@@ -8,13 +8,10 @@ from dataloaderSegmentation import ImageFolderSegmentation
 from torchvision.transforms import Compose, CenterCrop, Normalize
 from torchvision.transforms import ToTensor, ToPILImage
 from nn import SegNet
-from sklearn.datasets import make_classification
 from torch import nn
 import torch.nn.functional as F
 import torch.optim as optim
-from skorch.net import NeuralNet
 from torch.autograd import Variable
-import skorch
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
@@ -51,9 +48,9 @@ label_transform = Compose([
 ])
 
 
-image_path = '/Users/marc/Github/NeuralNetwork/Datasets/CamVid/train/*.png'
+image_path = '/data/scene_segmentation/CamVid/train/*.png'
 
-label_path = '/Users/marc/Github/NeuralNetwork/Datasets/CamVid/trainannot/*.png'
+label_path = '/ata/scene_segmentation/CamVid/trainannot/*.png'
 
 var = ImageFolderSegmentation(images_path=image_path,
                               label_path=label_path,
@@ -61,12 +58,12 @@ var = ImageFolderSegmentation(images_path=image_path,
                               label_transform=label_transform)
 
 trainloader = torch.utils.data.DataLoader(var, batch_size=3,
-                                          shuffle=False, num_workers=8)
+                                          shuffle=False, num_workers=10)
 
 
-image_path = '/Users/marc/Github/NeuralNetwork/Datasets/CamVid/val/*.png'
+image_path = '/data/scene_segmentation/CamVid/val/*.png'
 
-label_path = '/Users/marc/Github/NeuralNetwork/Datasets/CamVid/valannot/*.png'
+label_path = '/data/scene_segmentation/CamVid/valannot/*.png'
 
 var2 = ImageFolderSegmentation(images_path=image_path,
                                label_path=label_path,
@@ -74,10 +71,8 @@ var2 = ImageFolderSegmentation(images_path=image_path,
                                label_transform=transform)
 
 valloader = torch.utils.data.DataLoader(var, batch_size=3,
-                                        shuffle=False, num_workers=8)
+                                        shuffle=False, num_workers=10)
 
-
-net = SegNet()
 
 
 def imshow2(img, labels):
@@ -151,7 +146,9 @@ class runningScore(object):
 # plt.close(fig)
 
 running_metrics = runningScore(n_classes=21)
-
+model = SegNet()
+model = torch.nn.DataParallel(model, device_ids=range(torch.cuda.device_count()))
+odel.cuda()
 epochs = [20, 50]
 lrs = [0.01, 0.001]
 
@@ -168,7 +165,7 @@ for ep in epochs:
                 inputs, labels = data
 
                 # wrap them in Variable
-                inputs, labels = Variable(inputs), Variable(labels)
+                inputs, labels = Variable(inputs.cuda()), Variable(labels.cuda())
 
                 # zero the parameter gradients
                 optimizer.zero_grad()
