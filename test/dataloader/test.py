@@ -158,7 +158,7 @@ for ep in epochs:
 
                 # forward + backward + optimize
                 outputs = model(inputs)
-                loss = criterion(outputs, labels[:, 0])
+                loss = criterion(outputs, labels.view(-1))
                 loss.backward()
                 optimizer.step()
 
