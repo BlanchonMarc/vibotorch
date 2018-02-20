@@ -135,7 +135,7 @@ model = SegNet()
 model = torch.nn.DataParallel(model,
                               device_ids=range(torch.cuda.device_count()))
 model.cuda()
-epochs = [200, 500]
+epochs = [20, 50]
 lrs = [0.01, 0.001]
 best_iou = -100.0
 criterion = nn.CrossEntropyLoss()
@@ -181,8 +181,8 @@ for ep in epochs:
                 running_metrics.update(groundtruth, pred)
             score, class_iou = running_metrics.get_scores()
             for k, v in score.items():
-                # print(k, v)
-                pass
+                print(k, v)
+
             running_metrics.reset()
 
             if score['Mean IoU : \t'] >= best_iou:
@@ -191,5 +191,7 @@ for ep in epochs:
                          'model_state': model.state_dict(),
                          'optimizer_state': optimizer.state_dict(), }
                 torch.save(state,
-                           "{}_{}_best_model.pkl".format(args.arch,
-                                                         args.dataset))
+                           "{}_{}_{}_{}_best_model.pkl".format('segnet',
+                                                               'Camvid',
+                                                               str(epoch + '/' + ep),
+                                                               str(lr)))
