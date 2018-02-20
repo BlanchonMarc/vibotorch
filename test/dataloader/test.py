@@ -12,7 +12,6 @@ from torch import nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torch.autograd import Variable
-import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 
@@ -72,20 +71,6 @@ var2 = ImageFolderSegmentation(images_path=image_path,
 
 valloader = torch.utils.data.DataLoader(var, batch_size=3,
                                         shuffle=False, num_workers=10)
-
-
-
-def imshow2(img, labels):
-    plt.subplot(211)
-    img = img / 2 + 0.5     # unnormalize
-    npimg = img.numpy()
-    plt.imshow(np.transpose(npimg, (1, 2, 0)))
-
-    plt.subplot(212)
-    labels = labels * (255 / 21)     # unnormalize
-    nplab = labels.numpy()
-    plt.imshow(np.transpose(nplab, (1, 2, 0)))
-
 
 class runningScore(object):
 
@@ -148,15 +133,15 @@ class runningScore(object):
 running_metrics = runningScore(n_classes=21)
 model = SegNet()
 model = torch.nn.DataParallel(model, device_ids=range(torch.cuda.device_count()))
-odel.cuda()
-epochs = [20, 50]
+model.cuda()
+epochs = [200, 500]
 lrs = [0.01, 0.001]
-
+best_iou = -100.0
 criterion = nn.CrossEntropyLoss()
 for ep in epochs:
 
     for lr in lrs:
-        optimizer = optim.SGD(net.parameters(), lr=lr, momentum=0.9)
+        optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9)
 
         for epoch in range(ep):  # loop over the dataset multiple times
             model.train()
@@ -179,32 +164,31 @@ for ep in epochs:
                 # print statistics
                 if i % 20 == 0:    # print every 20 mini-batches
                     print("Epoch [%d/%d] Loss: %.4f" % (epoch + 1,
-                                                        args.n_epoch,
+                                                        ep,
                                                         loss.data[0]))
+	    print('Finished Training')
+            model.eval()
 
-                print('Finished Training')
-                model.eval()
+            for i_val, (images_val,
+                        labels_val) in tqdm(enumerate(valloader)):
+                images_val = Variable(images_val.cuda(), volatile=True)
+                labels_val = Variable(labels_val.cuda(), volatile=True)
 
-                for i_val, (images_val,
-                            labels_val) in tqdm(enumerate(valloader)):
-                    images_val = Variable(images_val.cuda(), volatile=True)
-                    labels_val = Variable(labels_val.cuda(), volatile=True)
+                outputs = model(images_val)
+                pred = outputs.data.max(1)[1].cpu().numpy()
+                groundtruth = labels_val.data.cpu().numpy()
+                running_metrics.update(groundtruth, pred)
+            score, class_iou = running_metrics.get_scores()
+            for k, v in score.items():
+                pass
+		# print(k, v)
+            running_metrics.reset()
 
-                    outputs = model(images_val)
-                    pred = outputs.data.max(1)[1].cpu().numpy()
-                    groundtruth = labels_val.data.cpu().numpy()
-                    running_metrics.update(groundtruth, pred)
-
-                score, class_iou = running_metrics.get_scores()
-                for k, v in score.items():
-                    print(k, v)
-                running_metrics.reset()
-
-                if score['Mean IoU : \t'] >= best_iou:
-                    best_iou = score['Mean IoU : \t']
-                    state = {'epoch': epoch + 1,
-                             'model_state': model.state_dict(),
-                             'optimizer_state': optimizer.state_dict(), }
-                    torch.save(state,
-                               "{}_{}_best_model.pkl".format(args.arch,
-                                                             args.dataset))
+            if score['Mean IoU : \t'] >= best_iou:
+                best_iou = score['Mean IoU : \t']
+                state = {'epoch': epoch + 1,
+                         'model_state': model.state_dict(),
+                         'optimizer_state': optimizer.state_dict(), }
+                torch.save(state,
+                           "{}_{}_best_model.pkl".format(args.arch,
+                                                         args.dataset))
