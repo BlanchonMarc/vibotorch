@@ -191,7 +191,4 @@ for ep in epochs:
                          'model_state': model.state_dict(),
                          'optimizer_state': optimizer.state_dict(), }
                 torch.save(state,
-                           "{}_{}_{}_{}_best_model.pkl".format('segnet',
-                                                               'Camvid',
-                                                               str(epoch) + '/' + str(ep),
-                                                               str(lr)))
+                           "{}_{}_best_model.pkl".format('segnet', 'Camvid'))
