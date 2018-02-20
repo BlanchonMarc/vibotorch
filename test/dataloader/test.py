@@ -144,9 +144,9 @@ optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
 cuda_activated = True
 
-for epoch in range(2):
+for epoch in range(500):
     running_loss = 0.0
-    for step, (images, targets) in enumerate(loader):
+    for step, (images, targets) in enumerate(trainloader):
         if cuda_activated:
             images = images.cuda()
             labels = labels.cuda()
