@@ -88,11 +88,11 @@ def convert_state_dict(state_dict):
 
     """
     dict_ = state_dict
-    for k, v in dict_.items():
+    for k, v in state_dict.items():
         name = k[7:]  # remove `module.`
-        state_dict[name] = v
-        state_dict.pop(k, None)
-    return state_dict
+        dict_[name] = v
+        _ = dict_.pop(k, None)
+    return dict_
 
 
 transform = Compose([
