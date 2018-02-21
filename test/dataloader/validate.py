@@ -91,7 +91,7 @@ def convert_state_dict(state_dict):
     for k, v in dict_.items():
         name = k[7:]  # remove `module.`
         state_dict[name] = v
-        del state_dict[k]
+        state_dict.pop(k, None)
     return state_dict
 
 
