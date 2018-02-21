@@ -91,7 +91,7 @@ def convert_state_dict(state_dict):
 
     dict_ = state_dict
     temp = ''
-    for k, v in state_dict.iteritems():
+    for k, v in state_dict.items():
         name = k[7:]  # remove `module.`
         dict_[name] = v
         temp = k
