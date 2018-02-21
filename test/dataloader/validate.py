@@ -96,7 +96,7 @@ def convert_state_dict(state_dict):
         namestore.append(k[7:])
         kstore.append(k)
         vstore.append(v)
-    c = {x: list(y) for x, y in zip(namestore, vstore)}
+    c = dict(zip(namestore, vstore))
     return c
 
 
