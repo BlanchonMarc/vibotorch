@@ -90,7 +90,7 @@ def convert_state_dict(state_dict):
 
     for k, v in state_dict.items():
         print(k)
-        print(v)
+        print(str(v))
         name = k[7:]  # remove `module.`
         state_dict[name] = v
         del state_dict[k]
