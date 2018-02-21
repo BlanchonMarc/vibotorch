@@ -88,16 +88,16 @@ def convert_state_dict(state_dict):
 
     """
 
-
-    dict_ = state_dict
     temp = ''
+    namestore = []
+    kstore = []
+    vsotre = []
     for k, v in state_dict.items():
-        name = k[7:]  # remove `module.`
-        dict_.update({k:v})
-        temp = k
-
-    _ = dict_.pop(temp, None)
-    return dict_
+        namestore.append(k[7:])
+        kstore.append(k)
+        vstore.append(v)
+    c = {x: list(y) for x, y in zip(namestore, zip(*vsotre))}
+    return c
 
 
 transform = Compose([
