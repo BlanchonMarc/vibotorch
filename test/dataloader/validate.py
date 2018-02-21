@@ -97,12 +97,12 @@ image_path = '/data/scene-segmentation/CamVid/test/*.png'
 
 label_path = '/data/scene-segmentation/CamVid/testannot/*.png'
 
-valloader = ImageFolderSegmentation(images_path=image_path,
+var = ImageFolderSegmentation(images_path=image_path,
                                     label_path=label_path,
                                     transform=transform,
                                     label_transform=label_transform)
 
-trainloader = torch.utils.data.DataLoader(var, batch_size=16,
+valloader = torch.utils.data.DataLoader(var, batch_size=16,
                                           shuffle=False, num_workers=10)
 
 
