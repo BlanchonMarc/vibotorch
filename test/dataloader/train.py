@@ -89,7 +89,7 @@ transform = Compose([
 label_transform = Compose([
     CenterCrop(256),
     to_label(),
-    relabel(255, 21),
+    relabel(255, 31),
 ])
 
 
@@ -106,9 +106,9 @@ trainloader = torch.utils.data.DataLoader(var, batch_size=16,
                                           shuffle=False, num_workers=10)
 
 
-image_path2 = '/data/scene-segmentation/CamVid/val/*.png'
+image_path2 = '/data/scene-segmentation/CamVid/test/*.png'
 
-label_path2 = '/data/scene-segmentation/CamVid/valannot/*.png'
+label_path2 = '/data/scene-segmentation/CamVid/testannot/*.png'
 
 var2 = ImageFolderSegmentation(images_path=image_path2,
                                label_path=label_path2,
@@ -130,13 +130,13 @@ valloader = torch.utils.data.DataLoader(var2, batch_size=16,
 # plt.show()
 # plt.close(fig)
 
-running_metrics = runningScore(n_classes=22)
-model = SegNet()
+running_metrics = runningScore(n_classes=32)
+model = SegNet(in_channels=3, n_classes=31)
 model = torch.nn.DataParallel(model,
                               device_ids=range(torch.cuda.device_count()))
 model.cuda()
-epochs = [20, 50]
-lrs = [0.01, 0.001]
+epochs = [500]
+lrs = [0.001]
 best_iou = -100.0
 criterion = nn.CrossEntropyLoss()
 for ep in epochs:
