@@ -81,6 +81,20 @@ class runningScore(object):
         self.confusion_matrix = np.zeros((self.n_classes, self.n_classes))
 
 
+def convert_state_dict(state_dict):
+    """Converts a state dict saved from a dataParallel module to normal
+       module state_dict inplace
+       :param state_dict is the loaded DataParallel model_state
+
+    """
+
+    for k, v in state_dict.items():
+        name = k[7:]  # remove `module.`
+        state_dict[name] = v
+        del state_dict[k]
+    return state_dict
+
+
 transform = Compose([
     CenterCrop(256),
     ToTensor(),
