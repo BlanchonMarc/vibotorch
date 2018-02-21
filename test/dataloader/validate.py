@@ -91,12 +91,12 @@ def convert_state_dict(state_dict):
     temp = ''
     namestore = []
     kstore = []
-    vsotre = []
+    vstore = []
     for k, v in state_dict.items():
         namestore.append(k[7:])
         kstore.append(k)
         vstore.append(v)
-    c = {x: list(y) for x, y in zip(namestore, zip(*vsotre))}
+    c = {x: list(y) for x, y in zip(namestore, zip(*vstore))}
     return c
 
 
