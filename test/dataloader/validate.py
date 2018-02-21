@@ -89,8 +89,6 @@ def convert_state_dict(state_dict):
     """
 
     for k, v in state_dict.items():
-        print(k)
-        print(str(v))
         name = k[7:]  # remove `module.`
         state_dict[name] = v
         del state_dict[k]
@@ -114,12 +112,12 @@ image_path = '/data/scene-segmentation/CamVid/test/*.png'
 label_path = '/data/scene-segmentation/CamVid/testannot/*.png'
 
 var = ImageFolderSegmentation(images_path=image_path,
-                                    label_path=label_path,
-                                    transform=transform,
-                                    label_transform=label_transform)
+                              label_path=label_path,
+                              transform=transform,
+                              label_transform=label_transform)
 
 valloader = torch.utils.data.DataLoader(var, batch_size=16,
-                                          shuffle=False, num_workers=10)
+                                        shuffle=False, num_workers=10)
 
 
 running_metrics = runningScore(n_classes=22)
