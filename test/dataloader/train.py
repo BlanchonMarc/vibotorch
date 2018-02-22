@@ -145,7 +145,7 @@ model = SegNet(in_channels=3, n_classes=n_classes)
 model = torch.nn.DataParallel(model,
                               device_ids=range(torch.cuda.device_count()))
 model.cuda()
-epochs = [50]
+epochs = [10]
 lrs = [0.001]
 best_iou = -100.0
 criterion = nn.CrossEntropyLoss()
