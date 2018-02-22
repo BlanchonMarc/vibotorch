@@ -154,9 +154,9 @@ model = torch.nn.DataParallel(model,
                               device_ids=range(torch.cuda.device_count()))
 model.cuda()
 epochs = [10]
-lrs = [0.001]
+lrs = [0.1]
 best_iou = -100.0
-criterion = nn.CrossEntropyLoss()
+criterion = nn.CrossEntropyLoss(reduce=False).cuda()
 for ep in epochs:
 
     for lr in lrs:
@@ -176,9 +176,9 @@ for ep in epochs:
 
                 # forward + backward + optimize
                 output = model(inputs)
-                output = output.view(output.size(0), output.size(1), -1)
-                output = torch.transpose(output, 1, 2).contiguous()
-                output = output.view(-1, output.size(2))
+                # output = output.view(output.size(0), output.size(1), -1)
+                # output = torch.transpose(output, 1, 2).contiguous()
+                # output = output.view(-1, output.size(2))
                 # labels = labels.view(-1)
                 loss = criterion(output, labels)
                 loss.backward()
