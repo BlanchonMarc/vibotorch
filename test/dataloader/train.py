@@ -180,7 +180,7 @@ for ep in epochs:
                 # output = torch.transpose(output, 1, 2).contiguous()
                 # output = output.view(-1, output.size(2))
                 # labels = labels.view(-1)
-                loss = criterion(output, labels[:, 0])
+                loss = criterion(output, labels)
                 loss.backward()
                 optimizer.step()
 
