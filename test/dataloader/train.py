@@ -89,7 +89,8 @@ transform = Compose([
 ])
 label_transform = Compose([
     CenterCrop(256),
-    to_label(),
+    ToTensor().type(torch.LongTensor),
+    # to_label(),
     # relabel(255, 31),
 ])
 
