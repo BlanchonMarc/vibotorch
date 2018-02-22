@@ -1,5 +1,6 @@
 from nn import U_Net
 import torch
+import torch.nn as nn
 from torch import autograd, optim
 
 # Execution
@@ -10,7 +11,7 @@ learning_rate = 0.0001
 nb = 500
 
 input_ = autograd.Variable(torch.rand(1, 3, 256, 256))
-target = autograd.Variable(torch.rand(batch_size, num_classes, nb, nb)).long()
+target = autograd.Variable(torch.rand(1, 3, 256, 256)).long()
 
 
 model = U_Net(in_channels=input_size, n_classes=num_classes)
@@ -24,16 +25,16 @@ for epoch in range(1):
 
     print(out)
 
-    # # Loss definition - cross entropy
-    # criterion = nn.CrossEntropyLoss()
-    # loss = criterion(out, target[:, 0])
-    #
-    # # nll loss
-    # # loss = F.nll_loss(out, target[:, 0])
-    #
-    # print ('Loss : ' + str(loss.data))
-    #
-    # model.zero_grad()
-    # loss.backward()
-    #
-    # opt.step()
+    # Loss definition - cross entropy
+    criterion = nn.CrossEntropyLoss()
+    loss = criterion(out, target[:, 0])
+
+    # nll loss
+    # loss = F.nll_loss(out, target[:, 0])
+
+    print ('Loss : ' + str(loss.data))
+
+    model.zero_grad()
+    loss.backward()
+
+    opt.step()
