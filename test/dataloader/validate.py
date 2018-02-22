@@ -148,5 +148,5 @@ score, class_iou = running_metrics.get_scores()
 for k, v in score.items():
     print(k, v)
 
-for i in range(22):
+for i in range(32):
     print(i, class_iou[i])
