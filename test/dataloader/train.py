@@ -176,9 +176,9 @@ for ep in epochs:
 
                 # forward + backward + optimize
                 output = model(inputs)
-                # output = output.view(output.size(0), output.size(1), -1)
-                # output = torch.transpose(output, 1, 2).contiguous()
-                # output = output.view(-1, output.size(2))
+                output = output.view(output.size(0), output.size(1), -1)
+                output = torch.transpose(output, 1, 2).contiguous()
+                output = output.view(-1, output.size(2))
                 # labels = labels.view(-1)
                 loss = criterion(output, labels)
                 loss.backward()
