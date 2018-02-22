@@ -41,6 +41,9 @@ class Layer(nn.Module):
         pass
 
 
+"""SEGNET"""
+
+
 class SegnetLayer_Decoder(nn.Module):
     """Derived Class to define a Decoder Layer of Segnet Architecture
 
@@ -141,6 +144,9 @@ class SegnetLayer_Encoder(nn.Module):
         return outputs, indices, unpooled_shape
 
 
+"""GENERAL"""
+
+
 class conv2DBatchNormRelu(nn.Module):
     """Derived Class to define an Encoder Layer of Segnet Architecture
 
@@ -186,4 +192,266 @@ class conv2DBatchNormRelu(nn.Module):
     def forward(self, inputs):
         """Processing the initialied sequence - See PyTorch Doc"""
         outputs = self.cbr_unit(inputs)
+        return outputs
+
+
+"""UPNET"""
+
+
+class UpNetLayer_Encoder(nn.Module):
+    """Derived Class to define an Encoder Layer of UpNet Architecture
+
+    Attributes
+    ----------
+    in_size : int
+        The input size of the network.
+
+    out_size : int
+        The output size of the network.
+
+    layer_size : int
+        The parameter defining the depth of the layer.
+
+    References
+    ----------
+    Efficient Deep Models for Monocular Road Segmentation
+    Gabriel L. Oliveira, Wolfram Burgard and Thomas Brox
+    """
+    def __init__(self, in_size, out_size, layer_size):
+        super(UpNetLayer_Encoder, self).__init__()
+
+        if layer_size == 2:
+            self.conv1 = conv2DBatchNormRelu(in_size, out_size, 3, 1, 1)
+            self.conv2 = conv2DBatchNormRelu(out_size, out_size, 3, 1, 1)
+            self.maxpool_with_argmax = nn.MaxPool2d(kernel_size=2,
+                                                    padding=1,
+                                                    stride=2,
+                                                    return_indices=True)
+
+        else:
+            self.conv1 = conv2DBatchNormRelu(in_size, out_size, 3, 1, 1)
+            self.conv2 = conv2DBatchNormRelu(out_size, out_size, 3, 1, 1)
+            self.conv3 = conv2DBatchNormRelu(out_size, out_size, 3, 1, 1)
+            self.maxpool_with_argmax = nn.MaxPool2d(kernel_size=2,
+                                                    padding=1,
+                                                    stride=2,
+                                                    return_indices=True)
+
+    def forward(self, inputs, layer_size):
+        """Processing in Sequential - See PyTorch Doc"""
+        if layer_size == 2:
+            outputs = self.conv1(inputs)
+            outputs = self.conv2(outputs)
+            unpooled_shape = outputs.size()
+            outputs, indices = self.maxpool_with_argmax(outputs)
+        else:
+            outputs = self.conv1(inputs)
+            outputs = self.conv2(outputs)
+            outputs = self.conv3(outputs)
+            unpooled_shape = outputs.size()
+            outputs, indices = self.maxpool_with_argmax(outputs)
+        return outputs, indices, unpooled_shape
+
+
+class UpNetLayer_ParticularEncoder(nn.Module):
+    """Derived Class to define an Encoder Layer of UpNet Architecture
+
+    Attributes
+    ----------
+    in_size : int
+        The input size of the network.
+
+    out_size : int
+        The output size of the network.
+
+    layer_size : int
+        The parameter defining the depth of the layer.
+
+    References
+    ----------
+    Efficient Deep Models for Monocular Road Segmentation
+    Gabriel L. Oliveira, Wolfram Burgard and Thomas Brox
+    """
+    def __init__(self, in_size, out_size, layer_size):
+        super(UpNetLayer_ParticularEncoder, self).__init__()
+
+        if layer_size == 2:
+            self.conv1 = conv2DBatchNormRelu(in_size, out_size, 1, 1, 0)
+            self.conv2 = conv2DBatchNormRelu(out_size, out_size, 1, 1, 0)
+            self.maxpool_with_argmax = nn.MaxPool2d(kernel_size=1,
+                                                    padding=0,
+                                                    stride=2,
+                                                    return_indices=True)
+        else:
+            self.conv1 = conv2DBatchNormRelu(in_size, out_size, 1, 1, 0)
+            self.conv2 = conv2DBatchNormRelu(out_size, out_size, 1, 1, 0)
+            self.conv3 = conv2DBatchNormRelu(out_size, out_size, 1, 1, 0)
+            self.maxpool_with_argmax = nn.MaxPool2d(kernel_size=1,
+                                                    padding=0,
+                                                    stride=2,
+                                                    return_indices=True)
+
+    def forward(self, inputs, layer_size):
+        """Processing in Sequential - See PyTorch Doc"""
+        if layer_size == 2:
+            outputs = self.conv1(inputs)
+            outputs = self.conv2(outputs)
+            unpooled_shape = outputs.size()
+            outputs, indices = self.maxpool_with_argmax(outputs)
+
+        else:
+            outputs = self.conv1(inputs)
+            outputs = self.conv2(outputs)
+            outputs = self.conv3(outputs)
+            unpooled_shape = outputs.size()
+            outputs, indices = self.maxpool_with_argmax(outputs)
+
+        return outputs, indices, unpooled_shape
+
+
+class UpNetLayer_ParticularEncoder_2(nn.Module):
+    """Derived Class to define an Encoder Layer of UpNet Architecture
+
+    Attributes
+    ----------
+    in_size : int
+        The input size of the network.
+
+    out_size : int
+        The output size of the network.
+
+    layer_size : int
+        The parameter defining the depth of the layer.
+
+    References
+    ----------
+    Efficient Deep Models for Monocular Road Segmentation
+    Gabriel L. Oliveira, Wolfram Burgard and Thomas Brox
+    """
+    def __init__(self, in_size, out_size, layer_size):
+        super(UpNetLayer_ParticularEncoder_2, self).__init__()
+
+        if layer_size == 2:
+            self.conv1 = conv2DBatchNormRelu(in_size, out_size, 3, 1, 10)
+            self.conv2 = conv2DBatchNormRelu(out_size, out_size, 3, 1, 1)
+            self.maxpool_with_argmax = nn.MaxPool2d(kernel_size=2,
+                                                    padding=0,
+                                                    stride=2,
+                                                    return_indices=True)
+        else:
+            self.conv1 = conv2DBatchNormRelu(in_size, out_size, 3, 1, 10)
+            self.conv2 = conv2DBatchNormRelu(out_size, out_size, 3, 1, 1)
+            self.conv3 = conv2DBatchNormRelu(out_size, out_size, 3, 1, 1)
+            self.maxpool_with_argmax = nn.MaxPool2d(kernel_size=2,
+                                                    padding=0,
+                                                    stride=2,
+                                                    return_indices=True)
+
+    def forward(self, inputs, layer_size):
+        """Processing in Sequential - See PyTorch Doc"""
+        if layer_size == 2:
+            outputs = self.conv1(inputs)
+            outputs = self.conv2(outputs)
+            unpooled_shape = outputs.size()
+            outputs, indices = self.maxpool_with_argmax(outputs)
+        else:
+            outputs = self.conv1(inputs)
+            outputs = self.conv2(outputs)
+            outputs = self.conv3(outputs)
+            unpooled_shape = outputs.size()
+            outputs, indices = self.maxpool_with_argmax(outputs)
+        return outputs, indices, unpooled_shape
+
+
+class UpNetLayer_Dropout(nn.Module):
+    """Derived Class to define a Decoder Layer of UpNet Architecture
+
+    Attributes
+    ----------
+    in_size : int
+        The input size of the network.
+
+    out_size : int
+        The output size of the network.
+
+    layer_size : int
+        The parameter defining the depth of the layer.
+
+    References
+    ----------
+    Efficient Deep Models for Monocular Road Segmentation
+    Gabriel L. Oliveira, Wolfram Burgard and Thomas Brox
+    """
+    def __init__(self, in_size, out_size, layer_size):
+        super(UpNetLayer_Dropout, self).__init__()
+        if layer_size == 2:
+            self.unpool = nn.MaxUnpool2d(2)
+            self.conv1 = conv2DBatchNormRelu(in_size, in_size, 1, 1, 0)
+            self.dropout = nn.Dropout2d(p=0.25, inplace=False)
+        else:
+            self.unpool = nn.MaxUnpool2d(2)
+            self.conv1 = conv2DBatchNormRelu(in_size, in_size, 1, 1, 0)
+            self.conv2 = conv2DBatchNormRelu(in_size, in_size, 1, 1, 0)
+            self.dropout = nn.Dropout2d(p=0.25, inplace=False)
+
+    def forward(self, inputs, layer_size, indices):
+        """Processing in Sequential - See PyTorch Doc"""
+        if layer_size == 2:
+            outputs = self.unpool(input=inputs, indices=indices)
+            outputs = self.conv1(outputs)
+            outputs = self.dropout(outputs)
+
+        else:
+            outputs = self.unpool(input=inputs, indices=indices)
+            outputs = self.conv1(outputs)
+            outputs = self.conv2(outputs)
+            outputs = self.dropout(outputs)
+
+        return outputs
+
+
+class UpNetLayer_Decoder(nn.Module):
+    """Derived Class to define a Decoder Layer of UpNet Architecture
+
+    Attributes
+    ----------
+    in_size : int
+        The input size of the network.
+
+    out_size : int
+        The output size of the network.
+
+    layer_size : int
+        The parameter defining the depth of the layer.
+
+    References
+    ----------
+    Efficient Deep Models for Monocular Road Segmentation
+    Gabriel L. Oliveira, Wolfram Burgard and Thomas Brox
+    """
+    def __init__(self, in_size, out_size, layer_size):
+        super(UpNetLayer_Decoder, self).__init__()
+        if layer_size == 2:
+            self.unpool = nn.MaxUnpool2d(2, 2)
+            self.conv1 = conv2DBatchNormRelu(in_size, in_size, 3, 1, 1)
+            self.conv2 = conv2DBatchNormRelu(in_size, out_size, 3, 1, 1)
+        else:
+            self.unpool = nn.MaxUnpool2d(2, 2)
+            self.conv1 = conv2DBatchNormRelu(in_size, in_size, 3, 1, 1)
+            self.conv2 = conv2DBatchNormRelu(in_size, in_size, 3, 1, 1)
+            self.conv3 = conv2DBatchNormRelu(in_size, out_size, 3, 1, 1)
+
+    def forward(self, inputs, indices, layer_size):
+        """Processing in Sequential - See PyTorch Doc"""
+        if layer_size == 2:
+            outputs = self.unpool(input=inputs, indices=indices)
+            outputs = self.conv1(outputs)
+            outputs = self.conv2(outputs)
+
+        else:
+            outputs = self.unpool(input=inputs, indices=indices)
+            outputs = self.conv1(outputs)
+            outputs = self.conv2(outputs)
+            outputs = self.conv3(outputs)
+
         return outputs
