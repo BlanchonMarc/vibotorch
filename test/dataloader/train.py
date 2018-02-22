@@ -158,7 +158,7 @@ lrs = [0.1]
 best_iou = -100.0
 weights = torch.ones(n_classes)
 weights[0] = 0
-criterion = nn.CrossEntropyLoss(weight=weights, reduce=False).cuda()
+criterion = nn.CrossEntropyLoss(reduce=False).cuda()
 for ep in epochs:
 
     for lr in lrs:
@@ -183,7 +183,7 @@ for ep in epochs:
                 # output = output.view(-1, output.size(2))
                 # labels = labels.view(-1)
                 loss = criterion(output, labels)
-                loss.backward()
+                loss.backward(weights)
                 optimizer.step()
 
                 # print statistics
