@@ -18,8 +18,14 @@ from tqdm import tqdm
 class to_label:
     """Class to convert PIL images to specific format of torch.Tensor."""
     def __call__(self, _input):
+        return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
+
+
+class to_long:
+    """Class to convert PIL images to specific format of torch.Tensor."""
+    def __call__(self, _input):
         # return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
-        return torch.from_numpy(_input).long()
+        return _input.type(torch.LongTensor
 
 
 class relabel:
@@ -89,7 +95,8 @@ transform = Compose([
 ])
 label_transform = Compose([
     CenterCrop(256),
-    ToTensor().type(torch.LongTensor),
+    ToTensor(),
+    to_long(),
     # to_label(),
     # relabel(255, 31),
 ])
