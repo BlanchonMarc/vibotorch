@@ -156,7 +156,9 @@ model.cuda()
 epochs = [10]
 lrs = [0.1]
 best_iou = -100.0
-criterion = nn.CrossEntropyLoss(reduce=False).cuda()
+weights = torch.ones(n_classes)
+weights[0] = 0
+criterion = nn.CrossEntropyLoss(weight=weights, reduce=False).cuda()
 for ep in epochs:
 
     for lr in lrs:
