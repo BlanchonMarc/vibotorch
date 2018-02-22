@@ -108,7 +108,7 @@ transform = Compose([
 label_transform = Compose([
     CenterCrop(256),
     to_label(),
-    relabel(255, 21),
+    relabel(255, 31),
 ])
 
 
@@ -126,7 +126,7 @@ valloader = torch.utils.data.DataLoader(var, batch_size=16,
 
 
 running_metrics = runningScore(n_classes=32)
-model = SegNet(n_classes=32)
+model = SegNet(n_classes=31)
 state = convert_state_dict(torch.load('segnet_Camvid_best_model.pkl')
                            ['model_state'])
 model.load_state_dict(state)
