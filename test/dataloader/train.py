@@ -158,7 +158,7 @@ lrs = [0.1]
 best_iou = -100.0
 weights = torch.ones(n_classes).cuda()
 weights[0] = 0
-criterion = nn.CrossEntropyLoss(reduce=True).cuda()
+criterion = nn.CrossEntropyLoss(reduce=True, size_average=False).cuda()
 for ep in epochs:
 
     for lr in lrs:
@@ -186,11 +186,13 @@ for ep in epochs:
                 loss.backward()
                 optimizer.step()
 
+
+
                 # print statistics
                 if i % 1 == 0:    # print every 20 mini-batches
                     print("Epoch [%d/%d] Loss: %.4f" % (epoch + 1,
                                                         ep,
-                                                        loss.data[1]))
+                                                        loss.data[0]))
             print('Finished Training')
             model.eval()
 
