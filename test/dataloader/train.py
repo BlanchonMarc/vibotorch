@@ -25,7 +25,7 @@ class to_long:
     """Class to convert PIL images to specific format of torch.Tensor."""
     def __call__(self, _input):
         # return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
-        return _input.type(torch.LongTensor
+        return _input.type(torch.LongTensor)
 
 
 class relabel:
