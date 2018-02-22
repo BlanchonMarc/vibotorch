@@ -154,7 +154,7 @@ model = torch.nn.DataParallel(model,
                               device_ids=range(torch.cuda.device_count()))
 model.cuda()
 epochs = [500]
-lrs = [0.1]
+lrs = [0.001]
 best_iou = -100.0
 
 # weights = torch.ones(n_classes).cuda()
