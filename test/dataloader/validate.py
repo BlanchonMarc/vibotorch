@@ -32,7 +32,7 @@ class load_label:
     """Class to convert PIL images to specific format of torch.Tensor."""
     def __call__(self, _input):
         # return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
-        return torch.from_numpy(np.array(_input, dtype=np.int32)).long()
+        return torch.from_numpy(np.array(_input, dtype=np.uint8)).long()
 
 
 class relabel:
