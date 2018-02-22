@@ -194,11 +194,13 @@ class UpNet(nn.Module):
         self.layer_4 = UpNetLayer_Encoder(256, 512, 3)
         self.layer_6 = UpNetLayer_ParticularEncoder(512, 1024, 3)
 
-        self.layer_7 = UpNetLayer_Decoder(1024, 512, 3)
+        self.layer_inter = UpNetLayer_Dropout()
+
+        self.layer_7 = UpNetLayer_Decoder_Particular(1024, 512, 3)
         self.layer_8 = UpNetLayer_Decoder(512, 256, 3)
         self.layer_9 = UpNetLayer_Decoder(256, 128, 3)
-        self.layer_10 = UpNetLayer_Decoder(128, 64, 3)
-        self.layer_11 = UpNetLayer_Decoder(64, n_classes, 3)
+        self.layer_10 = UpNetLayer_Decoder(128, 64, 2)
+        self.layer_11 = UpNetLayer_Decoder_Particular_2(64, n_classes, 2)
 
     def forward(self, inputs):
         """Sequential Computation, see nn.Module.forward methods PyTorch"""
@@ -214,7 +216,9 @@ class UpNet(nn.Module):
         down5, indices_5, unpool_shape5 = self.layer_6(inputs=down4,
                                                        layer_size=3)
 
-        up1 = self.layer_7(inputs=down5, indices=indices_5, layer_size=3)
+        inter = self.layer_inter(down5)
+
+        up1 = self.layer_7(inputs=inter, indices=indices_5, layer_size=3)
 
         up2 = self.layer_8(inputs=up1, indices=indices_4, layer_size=3)
 
@@ -223,5 +227,61 @@ class UpNet(nn.Module):
         up4 = self.layer_10(inputs=up3, indices=indices_2, layer_size=2)
 
         up5 = self.layer_11(inputs=up4, indices=indices_1, layer_size=2)
+        return up5
 
+
+"""UNET"""
+
+
+class U_Net(nn.Module):
+    """Derived Class to define a UNet Architecture of NN
+
+    Attributes
+    ----------
+    in_channels : int
+        The input size of the network.
+
+    n_classes : int
+        The output size of the network.
+
+    References
+    ----------
+    U-Net: Convolutional Networks for Biomedical Image Segmentation
+    """
+    def __init__(self, in_channels=3, n_classes=21):
+        """Sequential Instanciation of the different Layers"""
+        super(U_Net, self).__init__()
+
+        self.layer_0 = UNet_Encoder_Particular(in_channels, 64)
+
+        self.layer_1 = UNet_Encoder(64, 128)
+        self.layer_2 = UNet_Encoder(128, 256)
+        self.layer_3 = UNet_Encoder(256, 512)
+        self.layer_4 = UNet_Encoder(512, 512)
+
+        self.layer_7 = UNet_Decoder(1024, 256)
+        self.layer_8 = UNet_Decoder(512, 128)
+        self.layer_9 = UNet_Decoder(256, 64)
+        self.layer_10 = UNet_Decoder(128, 64)
+
+        self.layer_11 = UNet_Decoder_Particular(64, n_classes)
+
+    def forward(self, inputs):
+        """Sequential Computation, see nn.Module.forward methods PyTorch"""
+
+        down0 = self.layer_0(inputs=inputs)
+        down1 = self.layer_1(inputs=down0)
+        down2 = self.layer_2(inputs=down1)
+        down3 = self.layer_3(inputs=down2)
+        down4 = self.layer_4(inputs=down3)
+
+        up1 = self.layer_7(down4, down3)
+
+        up2 = self.layer_8(up1, down2)
+
+        up3 = self.layer_9(up2, down1)
+
+        up4 = self.layer_10(up3, down0)
+
+        up5 = self.layer_11(up4)
         return up5
