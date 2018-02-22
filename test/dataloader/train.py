@@ -18,7 +18,8 @@ from tqdm import tqdm
 class to_label:
     """Class to convert PIL images to specific format of torch.Tensor."""
     def __call__(self, _input):
-        return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
+        # return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
+        return torch.from_numpy(_input).long()
 
 
 class relabel:
@@ -89,7 +90,7 @@ transform = Compose([
 label_transform = Compose([
     CenterCrop(256),
     to_label(),
-    relabel(255, 31),
+    # relabel(255, 31),
 ])
 
 
@@ -129,9 +130,10 @@ valloader = torch.utils.data.DataLoader(var2, batch_size=16,
 #
 # plt.show()
 # plt.close(fig)
+n_classes = 12
 
-running_metrics = runningScore(n_classes=32)
-model = SegNet(in_channels=3, n_classes=31)
+running_metrics = runningScore(n_classes=n_classes)
+model = SegNet(in_channels=3, n_classes=n_classes)
 model = torch.nn.DataParallel(model,
                               device_ids=range(torch.cuda.device_count()))
 model.cuda()

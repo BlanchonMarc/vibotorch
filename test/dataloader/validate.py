@@ -18,7 +18,8 @@ from tqdm import tqdm
 class to_label:
     """Class to convert PIL images to specific format of torch.Tensor."""
     def __call__(self, _input):
-        return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
+        # return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
+        return torch.from_numpy(_input).long()
 
 
 class relabel:
@@ -108,7 +109,7 @@ transform = Compose([
 label_transform = Compose([
     CenterCrop(256),
     to_label(),
-    relabel(255, 31),
+    # relabel(255, 31),
 ])
 
 
@@ -124,9 +125,9 @@ var = ImageFolderSegmentation(images_path=image_path,
 valloader = torch.utils.data.DataLoader(var, batch_size=1,
                                         shuffle=False, num_workers=10)
 
-
-running_metrics = runningScore(n_classes=32)
-model = SegNet(n_classes=31)
+n_classes = 12
+running_metrics = runningScore(n_classes=n_classes)
+model = SegNet(n_classes=n_classes)
 state = convert_state_dict(torch.load('segnet_Camvid_best_model.pkl')
                            ['model_state'])
 model.load_state_dict(state)
