@@ -21,6 +21,13 @@ class to_label:
         return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
 
 
+class load_label:
+    """Class to convert PIL images to specific format of torch.Tensor."""
+    def __call__(self, _input):
+        # return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
+        return torch.from_numpy(numpy.array(_input, dtype=np.int8)).long()
+
+
 class to_long:
     """Class to convert PIL images to specific format of torch.Tensor."""
     def __call__(self, _input):
@@ -95,8 +102,9 @@ transform = Compose([
 ])
 label_transform = Compose([
     CenterCrop(256),
-    ToTensor(),
-    to_long(),
+    load_label(),
+    # ToTensor(),
+    # to_long(),
     # to_label(),
     # relabel(255, 31),
 ])
