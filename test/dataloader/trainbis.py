@@ -44,7 +44,8 @@ class load_label:
 transform = Compose([
     CenterCrop(256),
     ToTensor(),
-    NormalizeInput(),
+    # NormalizeInput(),
+    Normalize([.485, .456, .406], [.229, .224, .225]),
 ])
 label_transform = Compose([
     CenterCrop(256),
