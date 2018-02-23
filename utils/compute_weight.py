@@ -111,9 +111,3 @@ def NormalizedWeightComputationMedian(labels_path, n_classes):
     weight = np.median(freq) / freq
     weight = weight / weight.sum()
     return weight
-
-
-if __name__ == '__main__':
-    path_label = "/Users/marc/Github/NeuralNetwork/Datasets/CamVid/testannot/*.png"
-    weight = NormalizedWeightComputationMedian(path_label, 12)
-    print(weight)
