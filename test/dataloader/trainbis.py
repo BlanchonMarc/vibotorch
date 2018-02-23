@@ -14,8 +14,8 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.autograd import Variable
 from tqdm import tqdm
-from utils import evaluation
-from utils import WeightComputationMedian
+from metrics import evaluation
+from compute_weight import WeightComputationMedian
 
 
 class NormalizeInput:
