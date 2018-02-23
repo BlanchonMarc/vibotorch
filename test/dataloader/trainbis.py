@@ -88,7 +88,8 @@ model.cuda()
 epochs = [100]
 lrs = [0.001]
 
-metrics = evaluation(n_classes=n_classes, lr=lrs[0], modelstr="SegNet")
+metrics = evaluation(n_classes=n_classes, lr=lrs[0], modelstr="SegNet",
+                     textfile="Log.txt")
 
 
 weights = WeightComputationMedian(labels_path=label_path, n_classes=n_classes)
