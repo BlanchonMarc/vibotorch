@@ -69,6 +69,7 @@ class runningScore(object):
     def __init__(self, n_classes):
         self.n_classes = n_classes
         self.confusion_matrix = np.zeros((n_classes, n_classes))
+        self.counter = [None, None, None, None]  # TP FP TN FN
 
     def _fast_hist(self, label_true, label_pred, n_class):
         mask = (label_true >= 0) & (label_true < n_class)
@@ -82,6 +83,7 @@ class runningScore(object):
             self.confusion_matrix += self._fast_hist(lt.flatten(),
                                                      lp.flatten(),
                                                      self.n_classes)
+
 
     def get_scores(self):
         """Returns accuracy score evaluation result.
@@ -172,6 +174,7 @@ model.cuda()
 epochs = [100]
 lrs = [0.001]
 best_iou = -100.0
+
 
 # weights = torch.ones(n_classes).cuda()
 # weights[0] = 0
