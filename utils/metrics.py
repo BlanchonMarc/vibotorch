@@ -28,7 +28,7 @@ class evaluation(object):
         self.f = open(textfile, "a")
         self.f.write("\n##################################################\n")
         self.f.write("Training " + modelstr + "\n")
-        self.f.write("Leaning Rate" + str(lr) + "\n")
+        self.f.write("Leaning Rate " + str(lr) + "\n")
         self.f.write("##################################################\n")
 
     def __call__(self, gt, pred):
@@ -57,6 +57,8 @@ class evaluation(object):
         self.MeanAcc.append(np.nanmean(np.diag(self.C) / self.C.sum(axis=1)))
 
         self.IoU.append(np.nanmean(np.diag(self.C) / (self.C.sum(axis=0) + self.C.sum(axis=1) - np.diag(self.C))))
+
+        self.C = np.zeros((n_classes, n_classes))
 
     def estimate(self, epoch, max_epoch, model, optim):
         self.FalseP = np.mean(self.FalseP)
@@ -95,7 +97,6 @@ class evaluation(object):
                        "{}_{}_best_model.pkl".format('segnet', 'Camvid'))
 
 
-
     def reset(self):
         self.C = np.zeros((self.n_classes, self.n_classes))
         self.FalseP = []
@@ -116,21 +117,21 @@ class evaluation(object):
 
 
 
-if __name__ == '__main__':
-
-    n_classes = 12
-    scoring = evaluation(n_classes, 1 , 'seg')
-    first = torch.IntTensor(5, n_classes, 256, 256)
-    first.random_(0, n_classes)
-
-    second = torch.IntTensor(5, 256, 256)
-    second.random_(0, n_classes)
-
-    pred = first.max(1)[1].numpy()
-    print(pred.shape)
-    groundtruth = second.numpy()
-    print(groundtruth.shape)
-
-    scoring(groundtruth.ravel(), pred.ravel())
-
-    scoring.estimate(1, 20, model=1, optim=0)
+# if __name__ == '__main__':
+#
+#     n_classes = 12
+#     scoring = evaluation(n_classes, 1 , 'seg')
+#     first = torch.IntTensor(5, n_classes, 256, 256)
+#     first.random_(0, n_classes)
+#
+#     second = torch.IntTensor(5, 256, 256)
+#     second.random_(0, n_classes)
+#
+#     pred = first.max(1)[1].numpy()
+#     print(pred.shape)
+#     groundtruth = second.numpy()
+#     print(groundtruth.shape)
+#
+#     scoring(groundtruth.ravel(), pred.ravel())
+#
+#     scoring.estimate(1, 20, model=1, optim=0)
