@@ -85,7 +85,7 @@ model = SegNet(in_channels=3, n_classes=n_classes)
 model = torch.nn.DataParallel(model,
                               device_ids=range(torch.cuda.device_count()))
 model.cuda()
-epochs = [100]
+epochs = [10]
 lrs = [0.001]
 
 metrics = evaluation(n_classes=n_classes, lr=lrs[0], modelstr="SegNet",
@@ -137,3 +137,4 @@ for ep in epochs:
             metrics.estimate(epoch, ep, model, optimizer)
 
             metrics.reset()
+metrics.close()

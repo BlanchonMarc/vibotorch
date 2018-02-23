@@ -8,7 +8,7 @@ from PIL import Image
 
 
 class evaluation(object):
-    def __init__(self, n_classes, lr, modelstr, textfile ):
+    def __init__(self, n_classes, lr, modelstr, textfile):
         self.n_classes = n_classes
         self.C = np.zeros((n_classes, n_classes))
         self.FalseP = []
@@ -85,14 +85,14 @@ class evaluation(object):
         self.f.write("IoU: " + str(self.IoU) + "\n")
         self.f.write("##################################################\n")
 
-        # if self.IoU >= self.saving_param:
-        #     self.saving_param = self.IoU
-        #
-        #     state = {'epoch': epoch + 1,
-        #              'model_state': model.state_dict(),
-        #              'optimizer_state': optim.state_dict(), }
-        #     torch.save(state,
-        #                "{}_{}_best_model.pkl".format('segnet', 'Camvid'))
+        if self.IoU >= self.saving_param:
+            self.saving_param = self.IoU
+
+            state = {'epoch': epoch + 1,
+                     'model_state': model.state_dict(),
+                     'optimizer_state': optim.state_dict(), }
+            torch.save(state,
+                       "{}_{}_best_model.pkl".format('segnet', 'Camvid'))
 
 
 
@@ -109,6 +109,9 @@ class evaluation(object):
         self.overallAcc = []
         self.MeanAcc = []
         self.IoU = []
+
+    def close(self):
+        self.f.close()
 
 
 
