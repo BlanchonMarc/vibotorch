@@ -94,6 +94,7 @@ metrics = evaluation(n_classes=n_classes, lr=lrs[0], modelstr="SegNet",
 
 weights = WeightComputationMedian(labels_path=label_path, n_classes=n_classes)
 
+weights = torch.from_numpy(weights)
 
 criterion = nn.CrossEntropyLoss(weight=weights, reduce=True,
                                 size_average=True).cuda()
@@ -137,4 +138,4 @@ for ep in epochs:
             metrics.estimate(epoch, ep, model, optimizer)
 
             metrics.reset()
-metrics.close()
+    metrics.close()

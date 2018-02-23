@@ -61,17 +61,17 @@ class evaluation(object):
         self.C = np.zeros((self.n_classes, self.n_classes))
 
     def estimate(self, epoch, max_epoch, model, optim):
-        self.FalseP = np.mean(self.FalseP)
-        self.FalseN = np.mean(self.FalseN)
-        self.TrueP = np.mean(self.TrueP)
-        self.TrueN = np.mean(self.TrueN)
-        self.prec = np.mean(self.prec)
-        self.rec = np.mean(self.rec)
-        self.f1score = np.mean(self.f1score)
-        self.jaccard = np.mean(self.jaccard)
-        self.overallAcc = np.mean(self.overallAcc)
-        self.MeanAcc = np.mean(self.MeanAcc)
-        self.IoU = np.mean(self.IoU)
+        self.FalseP = np.float32(np.mean(self.FalseP))
+        self.FalseN = np.float32(np.mean(self.FalseN))
+        self.TrueP = np.float32(np.mean(self.TrueP))
+        self.TrueN = np.float32(np.mean(self.TrueN))
+        self.prec = np.float32(np.mean(self.prec))
+        self.rec = np.float32(np.mean(self.rec))
+        self.f1score = np.float32(np.mean(self.f1score))
+        self.jaccard = np.float32(np.mean(self.jaccard))
+        self.overallAcc = np.float32(np.mean(self.overallAcc))
+        self.MeanAcc = np.float32(np.mean(self.MeanAcc))
+        self.IoU = np.float32(np.mean(self.IoU))
 
         self.f.write("Epoch [" + str(epoch + 1) + " / " + str(max_epoch) + "]\n")
         self.f.write("False Positive: " + str(self.FalseP) + "\n")
@@ -96,7 +96,6 @@ class evaluation(object):
             torch.save(state,
                        "{}_{}_best_model.pkl".format('segnet', 'Camvid'))
 
-
     def reset(self):
         self.C = np.zeros((self.n_classes, self.n_classes))
         self.FalseP = []
@@ -113,9 +112,6 @@ class evaluation(object):
 
     def close(self):
         self.f.close()
-
-
-
 
 # if __name__ == '__main__':
 #
