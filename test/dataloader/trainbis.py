@@ -137,3 +137,4 @@ for ep in epochs:
             metrics.estimate(epoch, ep, model, optimizer)
 
             metrics.reset()
+metrics.close()
