@@ -10,7 +10,7 @@ from PIL import Image
 class evaluation(object):
     def __init__(self, n_classes, lr, modelstr, textfile):
         self.n_classes = n_classes
-        self.C = np.zeros((n_classes, n_classes))
+        self.C = np.zeros((self.n_classes, self.n_classes))
         self.FalseP = []
         self.FalseN = []
         self.TrueP = []
@@ -58,7 +58,7 @@ class evaluation(object):
 
         self.IoU.append(np.nanmean(np.diag(self.C) / (self.C.sum(axis=0) + self.C.sum(axis=1) - np.diag(self.C))))
 
-        self.C = np.zeros((n_classes, n_classes))
+        self.C = np.zeros((self.n_classes, self.n_classes))
 
     def estimate(self, epoch, max_epoch, model, optim):
         self.FalseP = np.mean(self.FalseP)
