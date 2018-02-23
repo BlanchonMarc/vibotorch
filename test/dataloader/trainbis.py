@@ -132,7 +132,7 @@ for ep in epochs:
                 outputs = model(images_val)
                 pred = outputs.data.max(1)[1].cpu().numpy()
                 groundtruth = labels_val.data.cpu().numpy()
-                metrics(groundtruth, pred)
+                metrics(groundtruth.ravel(), pred.ravel())
             metrics.estimate(epoch, ep, model, optimizer)
 
             metrics.reset()
