@@ -15,6 +15,21 @@ from torch.autograd import Variable
 from tqdm import tqdm
 
 
+class NormalizeInput:
+    def __call__(self, _input):
+        img = np.array(_input, dtype=np.uint8)
+        # img = img[:, :, ::-1]
+        img = img.astype(np.float64)
+        mean = np.array([104.00699, 116.66877, 122.67892])
+        img -= mean
+        img = img.astype(float) / 255.0
+        # # NHWC -> NCHW
+        # img = img.transpose(2, 0, 1)
+
+        img = torch.from_numpy(img).float()
+        return img
+
+
 class to_label:
     """Class to convert PIL images to specific format of torch.Tensor."""
     def __call__(self, _input):
@@ -47,6 +62,7 @@ class relabel:
 
         _input[_input == self.olabel] = self.nlabel
         return _input
+
 
 class runningScore(object):
 
@@ -160,7 +176,7 @@ best_iou = -100.0
 # weights = torch.ones(n_classes).cuda()
 # weights[0] = 0
 
-criterion = nn.CrossEntropyLoss( reduce=True,
+criterion = nn.CrossEntropyLoss(reduce=True,
                                 size_average=True).cuda()
 for ep in epochs:
 
