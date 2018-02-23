@@ -23,7 +23,7 @@ class NormalizeInput:
         img = np.array(_input, dtype=np.uint8)
         # img = img[:, :, ::-1]
         img = img.astype(np.float64)
-        mean = np.array([104.00699, 116.66877, 122.67892])
+        mean = np.array([122.67892, 104.00699, 116.66877])
         img -= mean
         img = img.astype(float) / 255.0
         # # NHWC -> NCHW
