@@ -33,7 +33,6 @@ class NormalizeInput:
         return img
 
 
-
 class load_label:
     """Class to convert PIL images to specific format of torch.Tensor."""
     def __call__(self, _input):
