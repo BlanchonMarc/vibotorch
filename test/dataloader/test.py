@@ -130,9 +130,6 @@ for i, (images, labels) in tqdm(enumerate(valloader)):
         outputs = model(images)
         pred = outputs.data.max(1)[1].cpu().numpy()
         gt = labels.data.cpu().numpy()
-        with open("pred/pred" + str(i) + ".txt", "w+") as f:
-            np.save("pred/pred" + str(i) + ".txt", pred)
-            f.close()
-        with open("gt/gt" + str(i) + ".txt", "w+") as f:
-            np.save("pred/pred" + str(i) + ".txt", gt)
-            f.close()
+        np.save("pred/pred" + str(i), pred)
+
+        np.save("gt/gt" + str(i), gt)
