@@ -15,6 +15,12 @@ from torch.autograd import Variable
 from tqdm import tqdm
 
 
+class load_label:
+    """Class to convert PIL images to specific format of torch.Tensor."""
+    def __call__(self, _input):
+        # return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
+        return torch.from_numpy(np.array(_input, dtype=np.uint8)).long()
+
 
 transform = Compose([
     CenterCrop(256),
