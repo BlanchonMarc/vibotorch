@@ -44,13 +44,15 @@ class evaluation(object):
         self.TrueN.append(self.C.sum() - (FalseP + FalseN + TrueP))
 
         self.prec.append(precision_score(gt, pred, labels=labels,
-                                         average='micro'))
+                                         average='weighted'))
 
-        self.rec.append(recall_score(gt, pred, labels=labels, average='micro'))
+        self.rec.append(recall_score(gt, pred, labels=labels,
+                                     average='weighted'))
 
-        self.f1score.append(f1_score(gt, pred, labels=labels, average='micro'))
+        self.f1score.append(f1_score(gt, pred, labels=labels,
+                                     average='weighted'))
 
-        self.jaccard.append(jaccard_similarity_score(gt, pred))
+        self.jaccard.append(jaccard_similarity_score(gt, pred, normalize=False))
 
         self.overallAcc.append(np.diag(self.C).sum() / self.C.sum())
 
