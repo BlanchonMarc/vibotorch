@@ -91,11 +91,14 @@ metrics = evaluation(n_classes=n_classes, lr=lrs[0], modelstr="SegNet",
                      textfile="newlog.txt")
 
 
-weights = WeightComputationMedian(labels_path=label_path, n_classes=n_classes)
+# weights = WeightComputationMedian(labels_path=label_path, n_classes=n_classes)
+#
+# weights = torch.from_numpy(weights).float()
+#
+# criterion = nn.CrossEntropyLoss(weight=weights, reduce=True,
+#                                 size_average=True).cuda()
 
-weights = torch.from_numpy(weights).float()
-
-criterion = nn.CrossEntropyLoss(weight=weights, reduce=True,
+criterion = nn.CrossEntropyLoss(reduce=True,
                                 size_average=True).cuda()
 for ep in epochs:
 
