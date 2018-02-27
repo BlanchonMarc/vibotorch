@@ -44,7 +44,7 @@ transform = Compose([
     CenterCrop(256),
     ToTensor(),
     # NormalizeInput(),
-    Normalize([105.0332, 108.4089, 110.3310], [69.9046, 72.6910, 72.1259]),
+    # Normalize([105.0332, 108.4089, 110.3310], [69.9046, 72.6910, 72.1259]),
 ])
 label_transform = Compose([
     CenterCrop(256),
