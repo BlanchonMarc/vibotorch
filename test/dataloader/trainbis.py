@@ -16,6 +16,7 @@ from torch.autograd import Variable
 from tqdm import tqdm
 from metrics import evaluation
 from compute_weight import WeightComputationMedian
+from compute_weight import NormalizedWeightComputationMedian
 
 
 class NormalizeInput:
@@ -91,15 +92,16 @@ metrics = evaluation(n_classes=n_classes, lr=lrs[0], modelstr="SegNet",
                      textfile="newlog.txt")
 
 
-# weights = WeightComputationMedian(labels_path=label_path, n_classes=n_classes)
-#
-# weights = torch.from_numpy(weights).float()
-#
-# criterion = nn.CrossEntropyLoss(weight=weights, reduce=True,
-#                                 size_average=True).cuda()
+weights = NormalizedWeightComputationMedian(labels_path=label_path,
+                                            n_classes=n_classes)
 
-criterion = nn.CrossEntropyLoss(reduce=True,
+weights = torch.from_numpy(weights).float().cuda()
+
+criterion = nn.CrossEntropyLoss(weight=weights, reduce=True,
                                 size_average=True).cuda()
+
+# criterion = nn.CrossEntropyLoss(reduce=True,
+#                                 size_average=True).cuda()
 for ep in epochs:
 
     for lr in lrs:
