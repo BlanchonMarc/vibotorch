@@ -63,7 +63,7 @@ var = ImageFolderSegmentation(images_path=image_path,
                               label_transform=label_transform)
 
 trainloader = torch.utils.data.DataLoader(var, batch_size=16,
-                                          shuffle=False, num_workers=10)
+                                          shuffle=True, num_workers=10)
 
 
 image_path2 = '/data/scene-segmentation/CamVid/test/*.png'
@@ -93,8 +93,8 @@ metrics = evaluation(n_classes=n_classes, lr=lrs[0], modelstr="SegNet",
                      textfile="newlog.txt")
 
 
-weights = NormalizedWeightComputationMedian(labels_path=label_path,
-                                            n_classes=n_classes)
+weights = WeightComputationMedian(labels_path=label_path,
+                                  n_classes=n_classes)
 
 weights = torch.from_numpy(weights).float().cuda()
 
@@ -106,7 +106,7 @@ criterion = nn.CrossEntropyLoss(weight=weights, reduce=True,
 for ep in epochs:
 
     for lr in lrs:
-        optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9)
+        optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=0.995)
 
         for epoch in range(ep):
             model.train()
