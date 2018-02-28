@@ -23,6 +23,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.nn as nn
 from torch import autograd, optim
+from torchvision import models
 
 
 class NeuralNetwork(nn.Module):
@@ -94,9 +95,51 @@ class SegNet(nn.Module):
         up2 = self.layer_9(inputs=up3, indices=indices_2,
                            output_shape=unpool_shape2, layer_size=2)
         output = self.layer_10(inputs=up2, indices=indices_1,
-                            output_shape=unpool_shape1, layer_size=2)
+                               output_shape=unpool_shape1, layer_size=2)
 
         return output
+
+    def init_encoder(self):
+        """Initialize encoder with VGG16 weights for Relu and Conv"""
+
+        vgg = models.vgg16(True)
+
+        blocks = [self.layer_1,
+                  self.layer_2,
+                  self.layer_3,
+                  self.layer_4,
+                  self.layer_5]
+
+        ranges = [[0, 4], [5, 9], [10, 16], [17, 23], [24, 29]]
+        features = list(vgg16.features.children())
+
+        vgg_layers = []
+        for _layer in features:
+            if isinstance(_layer, nn.Conv2d):
+                vgg_layers.append(_layer)
+
+        merged_layers = []
+        for idx, conv_block in enumerate(blocks):
+            if idx < 2:
+                units = [conv_block.conv1.cbr_unit,
+                         conv_block.conv2.cbr_unit]
+            else:
+                units = [conv_block.conv1.cbr_unit,
+                         conv_block.conv2.cbr_unit,
+                         conv_block.conv3.cbr_unit]
+            for _unit in units:
+                for _layer in _unit:
+                    if isinstance(_layer, nn.Conv2d):
+                        merged_layers.append(_layer)
+
+        assert len(vgg_layers) == len(merged_layers)
+
+        for l1, l2 in zip(vgg_layers, merged_layers):
+            if isinstance(l1, nn.Conv2d) and isinstance(l2, nn.Conv2d):
+                assert l1.weight.size() == l2.weight.size()
+                assert l1.bias.size() == l2.bias.size()
+                l2.weight.data = l1.weight.data
+                l2.bias.data = l1.bias.data
 
 
 class SegNet_1(nn.Module):

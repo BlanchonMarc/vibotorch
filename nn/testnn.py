@@ -1,4 +1,4 @@
-from nn import U_Net
+from nn import SegNet
 import torch
 import torch.nn as nn
 from torch import autograd, optim
@@ -14,27 +14,29 @@ input_ = autograd.Variable(torch.rand(1, 3, 256, 256))
 target = autograd.Variable(torch.rand(1, 3, 256, 256)).long()
 
 
-model = U_Net(in_channels=input_size, n_classes=num_classes)
+model = SegNet(in_channels=input_size, n_classes=num_classes)
+model.init_encoder()
 
-opt = optim.Adam(params=model.parameters(), lr=learning_rate)
 
-
-for epoch in range(1):
-    print('epoch: ' + str(epoch))
-    out = model(input_)
-
-    print(out)
-
-    # Loss definition - cross entropy
-    criterion = nn.CrossEntropyLoss()
-    loss = criterion(out, target[:, 0])
-
-    # nll loss
-    # loss = F.nll_loss(out, target[:, 0])
-
-    print ('Loss : ' + str(loss.data))
-
-    model.zero_grad()
-    loss.backward()
-
-    opt.step()
+# opt = optim.Adam(params=model.parameters(), lr=learning_rate)
+#
+#
+# for epoch in range(1):
+#     print('epoch: ' + str(epoch))
+#     out = model(input_)
+#
+#     print(out)
+#
+#     # Loss definition - cross entropy
+#     criterion = nn.CrossEntropyLoss()
+#     loss = criterion(out, target[:, 0])
+#
+#     # nll loss
+#     # loss = F.nll_loss(out, target[:, 0])
+#
+#     print ('Loss : ' + str(loss.data))
+#
+#     model.zero_grad()
+#     loss.backward()
+#
+#     opt.step()

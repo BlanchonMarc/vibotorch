@@ -82,6 +82,7 @@ valloader = torch.utils.data.DataLoader(var2, batch_size=16,
 n_classes = 12
 
 model = SegNet(in_channels=3, n_classes=n_classes)
+model.init_encoder()
 model = torch.nn.DataParallel(model,
                               device_ids=range(torch.cuda.device_count()))
 model.cuda()
@@ -114,11 +115,12 @@ for ep in epochs:
 
                 inputs = Variable(inputs.cuda())
                 labels = Variable(labels.cuda())
-
+                # mask = labels in (1,2,3)
                 optimizer.zero_grad()
 
                 output = model(inputs)
 
+                # loss = criterion(torch.masked_select(output, mask), labels)
                 loss = criterion(output, labels)
                 loss.backward()
                 optimizer.step()
