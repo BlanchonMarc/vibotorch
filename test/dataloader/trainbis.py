@@ -62,7 +62,7 @@ var = ImageFolderSegmentation(images_path=image_path,
                               transform=transform,
                               label_transform=label_transform)
 
-trainloader = torch.utils.data.DataLoader(var, batch_size=16,
+trainloader = torch.utils.data.DataLoader(var, batch_size=10,
                                           shuffle=True, num_workers=10, pin_memory=True)
 
 
@@ -75,7 +75,7 @@ var2 = ImageFolderSegmentation(images_path=image_path2,
                                transform=transform,
                                label_transform=label_transform)
 
-valloader = torch.utils.data.DataLoader(var2, batch_size=16,
+valloader = torch.utils.data.DataLoader(var2, batch_size=10,
                                         shuffle=False, num_workers=10, pin_memory=True)
 
 
