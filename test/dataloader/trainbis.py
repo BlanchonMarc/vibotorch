@@ -101,12 +101,15 @@ metrics = evaluation(n_classes=n_classes, lr=lrs[0], modelstr="SegNet",
 # criterion = nn.CrossEntropyLoss(weight=weights, reduce=True,
 #                                 size_average=True).cuda()
 
+# criterion = nn.CrossEntropyLoss(reduce=True,
+#                                size_average=True).cuda()
+
 criterion = nn.CrossEntropyLoss(reduce=True,
-                                size_average=True).cuda()
+                                size_average=True)
 for ep in epochs:
 
     for lr in lrs:
-        optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=0.995)
+        optimizer = optim.Adam(model.parameters(), lr=lr)
 
         for epoch in range(ep):
             model.train()
@@ -125,11 +128,9 @@ for ep in epochs:
                 loss.backward()
                 optimizer.step()
 
-                if i % 1 == 0:
-                    print("Epoch [%d/%d] Loss: %.4f" % (epoch + 1,
-                                                        ep,
-                                                        loss.data))
-            print('Epoch ' + str(epoch + 1) + " Done")
+                print("[%d/%d] Loss: %.4f" % (epoch + 1,
+                                              ep, loss.data))
+
             model.eval()
 
             for i_val, (images_val,
@@ -144,4 +145,4 @@ for ep in epochs:
             metrics.estimate(epoch, ep, model, optimizer)
 
             metrics.reset()
-    metrics.close()
+metrics.close()
