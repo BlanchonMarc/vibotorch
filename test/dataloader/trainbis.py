@@ -116,8 +116,8 @@ for ep in epochs:
             for i, data in tqdm(enumerate(trainloader, 0)):
                 inputs, labels = data
 
-                inputs = Variable(inputs.cuda())
-                labels = Variable(labels.cuda())
+                inputs = Variable(inputs).cuda()
+                labels = Variable(labels).cuda()
                 # mask = labels in (1,2,3)
                 optimizer.zero_grad()
 
