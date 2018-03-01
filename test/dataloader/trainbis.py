@@ -136,7 +136,7 @@ for ep in epochs:
                 aver_Loss += loss.data
                 n_it = i
             aver_Loss = aver_Loss / n_it
-            print("Averaged Loss Ep[[%d/%d]] : %d" % (save_epoch,
+            print("Averaged Loss Ep[[%d/%d]] : %f" % (save_epoch,
                                                       ep,
                                                       aver_Loss))
 

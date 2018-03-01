@@ -116,7 +116,7 @@ class evaluation(object):
         self.f.close()
 
     def print_major_metric(self):
-        print("[MIoU : %d ; F1 : %d]" % (self.IoU, self.f1score))
+        print("[MIoU : %f ; F1 : %f]" % (self.IoU, self.f1score))
 
 # if __name__ == '__main__':
 #
