@@ -86,23 +86,23 @@ model.init_encoder()
 model = torch.nn.DataParallel(model,
                               device_ids=range(torch.cuda.device_count()))
 model.cuda()
-epochs = [100]
+epochs = [200]
 lrs = [0.001]
 
 metrics = evaluation(n_classes=n_classes, lr=lrs[0], modelstr="SegNet",
                      textfile="newlog.txt")
 
 
-weights = WeightComputationMedian(labels_path=label_path,
-                                  n_classes=n_classes)
-
-weights = torch.from_numpy(weights).float().cuda()
-
-criterion = nn.CrossEntropyLoss(weight=weights, reduce=True,
-                                size_average=True).cuda()
-
-# criterion = nn.CrossEntropyLoss(reduce=True,
+# weights = WeightComputationMedian(labels_path=label_path,
+#                                   n_classes=n_classes)
+#
+# weights = torch.from_numpy(weights).float().cuda()
+#
+# criterion = nn.CrossEntropyLoss(weight=weights, reduce=True,
 #                                 size_average=True).cuda()
+
+criterion = nn.CrossEntropyLoss(reduce=True,
+                                size_average=True).cuda()
 for ep in epochs:
 
     for lr in lrs:
