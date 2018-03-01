@@ -63,7 +63,7 @@ var = ImageFolderSegmentation(images_path=image_path,
                               label_transform=label_transform)
 
 trainloader = torch.utils.data.DataLoader(var, batch_size=16,
-                                          shuffle=True, num_workers=10)
+                                          shuffle=True, num_workers=5)
 
 
 image_path2 = '/data/scene-segmentation/CamVid/test/*.png'
@@ -76,7 +76,7 @@ var2 = ImageFolderSegmentation(images_path=image_path2,
                                label_transform=label_transform)
 
 valloader = torch.utils.data.DataLoader(var2, batch_size=16,
-                                        shuffle=False, num_workers=10)
+                                        shuffle=False, num_workers=5)
 
 
 n_classes = 12
@@ -116,8 +116,8 @@ for ep in epochs:
             for i, data in tqdm(enumerate(trainloader, 0)):
                 inputs, labels = data
 
-                inputs = Variable(inputs).cuda()
-                labels = Variable(labels).cuda()
+                inputs = Variable(inputs.cuda())
+                labels = Variable(labels.cuda())
                 # mask = labels in (1,2,3)
                 optimizer.zero_grad()
 
