@@ -83,8 +83,8 @@ n_classes = 12
 
 model = SegNet(in_channels=3, n_classes=n_classes)
 model.init_encoder()
-model = torch.nn.DataParallel(model,
-                              device_ids=range(torch.cuda.device_count()))
+# model = torch.nn.DataParallel(model,
+#                              device_ids=range(torch.cuda.device_count()))
 model.cuda()
 epochs = [200]
 lrs = [0.001]
@@ -110,7 +110,7 @@ for ep in epochs:
 
         for epoch in range(ep):
             model.train()
-            for i, data in enumerate(trainloader, 0):
+            for i, data in tqdm(enumerate(trainloader, 0)):
                 inputs, labels = data
 
                 inputs = Variable(inputs.cuda())
