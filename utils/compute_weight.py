@@ -1,11 +1,10 @@
 import numpy as np
 import imageio
-import matplotlib.pyplot as plt
 import glob
 
 
 def SimpleWeightComputation(labels_path, n_classes):
-
+    """Compute weight in a basic way, Parity in Dataset"""
     lbl_pths = glob.glob(labels_path)
     # lbl_container = []
     pix_per_class = [0] * 12
@@ -28,6 +27,7 @@ def SimpleWeightComputation(labels_path, n_classes):
 
 
 def InvertSimpleWeightComputation(labels_path, n_classes):
+    """Invert the parity accross the dataset for all classes"""
     freq = SimpleWeightComputation(labels_path, n_classes)
 
     invertweight = [1 - x for x in freq]
@@ -37,7 +37,7 @@ def InvertSimpleWeightComputation(labels_path, n_classes):
 
 
 def SimpleMedianWeightComputation(labels_path, n_classes):
-
+    """Compute the median of frequency of appearance on frequency"""
     freq = SimpleWeightComputation(labels_path, n_classes)
     weight = np.median(freq) / freq
     # print(weight)
@@ -48,7 +48,7 @@ def SimpleMedianWeightComputation(labels_path, n_classes):
 
 
 def NormalizedSimpleMedianWeightComputation(labels_path, n_classes):
-
+    """Normalized version ( all sum to 1 ) of median computation"""
     freq = SimpleWeightComputation(labels_path, n_classes)
     weight = np.median(freq) / freq
 
@@ -59,7 +59,7 @@ def NormalizedSimpleMedianWeightComputation(labels_path, n_classes):
 
 
 def WeightComputation(labels_path, n_classes):
-
+    """Compute the weight according to the appearance in dataset"""
     lbl_pths = glob.glob(labels_path)
     # lbl_container = []
     pix_per_class = [0] * 12
@@ -89,7 +89,8 @@ def WeightComputation(labels_path, n_classes):
     return freq
 
 
-def InertWeightComputation(labels_path, n_classes):
+def InvertWeightComputation(labels_path, n_classes):
+    """Invert the weight proportion for each classes ( 1 - X )"""
     weight = WeightComputation(labels_path, n_classes)
 
     invertweight = [1 - x for x in weight]
@@ -99,14 +100,14 @@ def InertWeightComputation(labels_path, n_classes):
 
 
 def WeightComputationMedian(labels_path, n_classes):
-
+    """Median of appearance on appearance proportional appearance in image"""
     freq = WeightComputation(labels_path, n_classes)
     weight = np.median(freq) / freq
     return weight
 
 
 def NormalizedWeightComputationMedian(labels_path, n_classes):
-
+    """Normalized version of the WeightComputationMedian ( sum = 1 )"""
     freq = WeightComputation(labels_path, n_classes)
     weight = np.median(freq) / freq
     weight = weight / weight.sum()

@@ -102,7 +102,7 @@ class evaluation(object):
                      'model_state': model.state_dict(),
                      'optimizer_state': optim.state_dict(), }
             torch.save(state,
-                       "{}_{}_best_model.pkl".format('segnet', 'Camvid'))
+                       "{}_{}_best_model2.pkl".format('segnet', 'Camvid'))
 
     def reset(self):
         """Reset the object parameters"""
