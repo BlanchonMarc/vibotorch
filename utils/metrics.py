@@ -115,6 +115,9 @@ class evaluation(object):
     def close(self):
         self.f.close()
 
+    def print_major_metric():
+        print("[MIoU : %d ; F1 : %d]" % (self.IoU, self.f1score))
+
 # if __name__ == '__main__':
 #
 #     n_classes = 12

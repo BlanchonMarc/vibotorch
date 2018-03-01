@@ -63,7 +63,8 @@ var = ImageFolderSegmentation(images_path=image_path,
                               label_transform=label_transform)
 
 trainloader = torch.utils.data.DataLoader(var, batch_size=10,
-                                          shuffle=True, num_workers=10, pin_memory=True)
+                                          shuffle=True, num_workers=10,
+                                          pin_memory=True)
 
 
 image_path2 = '/data/scene-segmentation/CamVid/test/*.png'
@@ -76,7 +77,8 @@ var2 = ImageFolderSegmentation(images_path=image_path2,
                                label_transform=label_transform)
 
 valloader = torch.utils.data.DataLoader(var2, batch_size=10,
-                                        shuffle=False, num_workers=10, pin_memory=True)
+                                        shuffle=False, num_workers=10,
+                                        pin_memory=True)
 
 
 n_classes = 12
@@ -93,18 +95,15 @@ metrics = evaluation(n_classes=n_classes, lr=lrs[0], modelstr="SegNet",
                      textfile="newlog.txt")
 
 
-# weights = WeightComputationMedian(labels_path=label_path,
-#                                   n_classes=n_classes)
-#
-# weights = torch.from_numpy(weights).float().cuda()
-#
-# criterion = nn.CrossEntropyLoss(weight=weights, reduce=True,
-#                                 size_average=True).cuda()
+weights = NormalizedWeightComputationMedian(labels_path=label_path,
+                                            n_classes=n_classes)
 
-# criterion = nn.CrossEntropyLoss(reduce=True,
-#                                size_average=True).cuda()
+weights = torch.from_numpy(weights).float().cuda()
 
-criterion = nn.CrossEntropyLoss()
+criterion = nn.CrossEntropyLoss(weight=weights, reduce=True,
+                                size_average=True).cuda()
+
+# criterion = nn.CrossEntropyLoss().cuda()
 
 for ep in epochs:
 
@@ -113,6 +112,9 @@ for ep in epochs:
 
         for epoch in range(ep):
             model.train()
+            aver_Loss = 0
+            n_it = 0
+            save_epoch = 0
             for i, data in tqdm(enumerate(trainloader, 0)):
                 inputs, labels = data
 
@@ -130,6 +132,13 @@ for ep in epochs:
 
                 print("[%d/%d] Loss: %.4f" % (epoch + 1,
                                               ep, loss.data))
+                save_epoch = epoch + 1
+                aver_Loss += loss.data
+                n_it = i
+            aver_Loss = aver_Loss / n_it
+            print("Averaged Loss Ep[[%d/%d]] : %d" % (save_epoch,
+                                                      ep,
+                                                      aver_Loss))
 
             model.eval()
 
@@ -143,6 +152,6 @@ for ep in epochs:
                 groundtruth = labels_val.data.cpu().numpy()
                 metrics(groundtruth.ravel(), pred.ravel())
             metrics.estimate(epoch, ep, model, optimizer)
-
+            metrics.print_major_metric()
             metrics.reset()
 metrics.close()
