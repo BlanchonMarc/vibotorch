@@ -102,7 +102,7 @@ class SegNet(nn.Module):
     def init_encoder(self):
         """Initialize encoder with VGG16 weights for Relu and Conv"""
 
-        vgg = models.vgg19(pretrained=True)
+        vgg = models.vgg16(pretrained=True)
 
         blocks = [self.layer_1,
                   self.layer_2,
