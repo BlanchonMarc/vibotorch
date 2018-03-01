@@ -63,7 +63,7 @@ var = ImageFolderSegmentation(images_path=image_path,
                               label_transform=label_transform)
 
 trainloader = torch.utils.data.DataLoader(var, batch_size=16,
-                                          shuffle=True, num_workers=5)
+                                          shuffle=True, num_workers=10, pin_memory=True)
 
 
 image_path2 = '/data/scene-segmentation/CamVid/test/*.png'
@@ -76,7 +76,7 @@ var2 = ImageFolderSegmentation(images_path=image_path2,
                                label_transform=label_transform)
 
 valloader = torch.utils.data.DataLoader(var2, batch_size=16,
-                                        shuffle=False, num_workers=5)
+                                        shuffle=False, num_workers=10, pin_memory=True)
 
 
 n_classes = 12
@@ -104,8 +104,8 @@ metrics = evaluation(n_classes=n_classes, lr=lrs[0], modelstr="SegNet",
 # criterion = nn.CrossEntropyLoss(reduce=True,
 #                                size_average=True).cuda()
 
-criterion = nn.CrossEntropyLoss(reduce=True,
-                                size_average=True)
+criterion = nn.CrossEntropyLoss()
+
 for ep in epochs:
 
     for lr in lrs:
