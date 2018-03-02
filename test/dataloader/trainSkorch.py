@@ -126,4 +126,4 @@ net = skorch.NeuralNet(
 #     y = torch.cat((y, Y[i]), 0)
 # xfin = x.unsqueeze(0)
 # yfin = y.unsqueeze(0)
-net.fit(X=iter(var), y=None)
+net.fit(X=var, y=None)
