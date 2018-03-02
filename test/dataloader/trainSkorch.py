@@ -91,7 +91,7 @@ network = SegNet(in_channels=3, n_classes=n_classes)
 network.init_encoder()
 # model = torch.nn.DataParallel(model,
 #                              device_ids=range(torch.cuda.device_count()))
-network.cuda()
+# network.cuda()
 epochs = [200]
 lrs = [0.001]
 
