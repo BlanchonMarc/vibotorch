@@ -119,11 +119,11 @@ net = skorch.NeuralNet(
     callbacks=None
 )
 
-x = torch.FloatTensor()
-y = torch.LongTensor()
-for i in range(len(X)):
-    x = torch.cat((x, X[i]), 0)
-    y = torch.cat((y, Y[i]), 0)
-xfin = x.unsqueeze(0)
-yfin = y.unsqueeze(0)
-net.fit(xfin, yfin)
+# x = torch.FloatTensor()
+# y = torch.LongTensor()
+# for i in range(len(X)):
+#     x = torch.cat((x, X[i]), 0)
+#     y = torch.cat((y, Y[i]), 0)
+# xfin = x.unsqueeze(0)
+# yfin = y.unsqueeze(0)
+net.fit(X, Y)
