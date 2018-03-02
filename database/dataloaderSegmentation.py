@@ -6,6 +6,7 @@ import os
 import glob
 from PIL import Image
 from torch.utils.data import Dataset
+from torch.autograd import Variable
 
 
 class ImageFolderSegmentation(Dataset):
