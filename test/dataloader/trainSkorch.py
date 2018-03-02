@@ -101,13 +101,13 @@ net = skorch.NeuralNet(
     max_epochs=10,
     lr=0.1,
 )
-inputs = np.array([])
-labels = np.array([])
+inputsa = np.array([])
+labelsa = np.array([])
 for i, data in tqdm(enumerate(var)):
     inputs, labels = data
-    inputs.append(Variable(inputs.cuda()))
-    labels.append(Variable(labels.cuda()))
+    inputsa.append(Variable(inputs.cuda()))
+    labelsa.append(Variable(labels.cuda()))
 
-net.fit(inputs,labels)
+net.fit(inputsa, labelsa)
 
 # saving
