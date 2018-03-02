@@ -119,4 +119,11 @@ net = skorch.NeuralNet(
     callbacks=None
 )
 
+x = torch.FloatTensor()
+y = torch.LongTensor()
+for i in range(len(X)):
+    x = torch.cat((x, out), 0)
+    y = torch.cat((y, out), 0)
+    print('appended')
+
 net.fit(X, Y)
