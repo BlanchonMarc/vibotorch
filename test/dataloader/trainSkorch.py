@@ -105,8 +105,8 @@ inputsa = np.array([])
 labelsa = np.array([])
 for i, data in tqdm(enumerate(var)):
     inputs, labels = data
-    inputsa.append(Variable(inputs.cuda()))
-    labelsa.append(Variable(labels.cuda()))
+    append(inputsa, Variable(inputs.cuda()))
+    append(labelsa, Variable(labels.cuda()))
 
 net.fit(inputsa, labelsa)
 
