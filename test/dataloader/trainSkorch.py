@@ -87,21 +87,21 @@ trainloader = torch.utils.data.DataLoader(var, batch_size=10,
 
 n_classes = 12
 
-model = SegNet(in_channels=3, n_classes=n_classes)
-model.init_encoder()
+network = SegNet(in_channels=3, n_classes=n_classes)
+network.init_encoder()
 # model = torch.nn.DataParallel(model,
 #                              device_ids=range(torch.cuda.device_count()))
-model.cuda()
+network.cuda()
 epochs = [200]
 lrs = [0.001]
 
 net = skorch.NeuralNet(
-    module=model,
+    module=network,
     criterion=torch.nn.CrossEntropyLoss,
 )
 
 model = Pipeline([
-    ('my-features', get_features()),
+    ('my-features', skorch.get_features()),
     ('net', net),
 ])
 model.fit(trainloader)
