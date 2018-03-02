@@ -302,6 +302,7 @@ class ImageFolderSegmentationY(Dataset):
             return label
 
     def __len__(self):
+        self.__class__ = torch.cuda.LongTensor
         return len(self.image_filenames)
 
     def __repr__(self):
