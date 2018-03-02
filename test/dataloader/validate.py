@@ -107,7 +107,7 @@ def convert_state_dict(state_dict):
     kstore = []
     vstore = []
     for k, v in state_dict.items():
-        namestore.append(k[7:])
+        namestore.append(k[8:])
         kstore.append(k)
         vstore.append(v)
     c = dict(zip(namestore, vstore))
@@ -143,9 +143,9 @@ valloader = torch.utils.data.DataLoader(var, batch_size=1,
 n_classes = 12
 running_metrics = runningScore(n_classes=n_classes)
 model = SegNet(n_classes=n_classes)
-# state = convert_state_dict(torch.load('segnet_Camvid_best_model.pkl')
-#                            ['model_state'])
-model.load_state_dict(torch.load('segnet_Camvid_best_model.pkl'))
+state = convert_state_dict(torch.load('segnet_Camvid_best_model.pkl')
+                           ['model_state'])
+model.load_state_dict(state)
 model.eval()
 
 for i, (images, labels) in tqdm(enumerate(valloader)):
