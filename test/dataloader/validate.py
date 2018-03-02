@@ -145,7 +145,7 @@ running_metrics = runningScore(n_classes=n_classes)
 model = SegNet(n_classes=n_classes)
 state = convert_state_dict(torch.load('segnet_Camvid_best_model.pkl')
                            ['model_state'])
-model.load_state_dict(state)
+model.load_state_dict(torch.load('segnet_Camvid_best_model.pkl'))
 model.eval()
 
 for i, (images, labels) in tqdm(enumerate(valloader)):
