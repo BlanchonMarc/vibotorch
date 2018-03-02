@@ -101,9 +101,9 @@ net = skorch.NeuralNet(
     max_epochs=10,
     lr=0.1,
 )
-inputs = np.array()
-labels = np.array()
-for i, data in tqdm(enumerate(var, 0)):
+inputs = np.array([])
+labels = np.array([])
+for i, data in tqdm(enumerate(var)):
     inputs, labels = data
     inputs.append(Variable(inputs.cuda()))
     labels.append(Variable(labels.cuda()))
