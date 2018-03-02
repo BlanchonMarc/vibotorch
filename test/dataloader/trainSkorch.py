@@ -100,6 +100,7 @@ net = skorch.NeuralNet(
     criterion=torch.nn.CrossEntropyLoss,
     max_epochs=10,
     lr=0.1,
+    train_split=None
 )
 
 net.fit(var)
