@@ -101,16 +101,7 @@ net = skorch.NeuralNet(
     max_epochs=10,
     lr=0.1,
 )
-inputsa = np.array([])
-labelsa = np.array([])
-# for i, data in tqdm(enumerate(var)):
-for i in range(len(var)):
-    data = var[i]
-    inputs, labels = data
-    np.append(inputsa, Variable(inputs.cuda()))
-    np.append(labelsa, Variable(labels.cuda()))
-    print('Image Appended')
 
-net.fit(inputsa, labelsa)
+net.fit(var)
 
 # saving
