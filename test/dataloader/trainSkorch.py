@@ -109,6 +109,7 @@ for i in range(len(var)):
     inputs, labels = data
     np.append(inputsa, Variable(inputs.cuda()))
     np.append(labelsa, Variable(labels.cuda()))
+    print('Image Appended')
 
 net.fit(inputsa, labelsa)
 
