@@ -102,6 +102,6 @@ net = skorch.NeuralNet(
     lr=0.1,
 )
 
-net.fit(trainloader)
+net.fit(var)
 
 # saving
