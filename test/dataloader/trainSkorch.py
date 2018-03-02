@@ -103,7 +103,7 @@ net = skorch.NeuralNet(
 )
 inputs = np.array()
 labels = np.array()
-for i, data in tqdm(enumerate(trainloader, 0)):
+for i, data in tqdm(enumerate(var)):
     inputs, labels = data
     inputs.append(Variable(inputs.cuda()))
     labels.append(Variable(labels.cuda()))
