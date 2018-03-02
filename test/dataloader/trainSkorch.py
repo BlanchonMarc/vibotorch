@@ -101,7 +101,7 @@ Y = ImageFolderSegmentationY(images_path=image_path,
 n_classes = 12
 
 network = SegNet(in_channels=3, n_classes=n_classes)
-network.init_encoder()
+# network.init_encoder()
 # model = torch.nn.DataParallel(model,
 #                              device_ids=range(torch.cuda.device_count()))
 network.cuda()
