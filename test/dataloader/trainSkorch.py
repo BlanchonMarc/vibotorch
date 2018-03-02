@@ -6,6 +6,8 @@ import torch
 import torchvision
 import numpy as np
 from dataloaderSegmentation import ImageFolderSegmentation
+from dataloaderSegmentation import ImageFolderSegmentationX
+from dataloaderSegmentation import ImageFolderSegmentationY
 from torchvision.transforms import Compose, CenterCrop, Normalize
 from torchvision.transforms import ToTensor, ToPILImage
 from nn import SegNet
@@ -70,6 +72,17 @@ trainloader = torch.utils.data.DataLoader(var, batch_size=10,
                                           shuffle=True, num_workers=10,
                                           pin_memory=True)
 
+X = ImageFolderSegmentationX(images_path=image_path,
+                             label_path=label_path,
+                             transform=transform,
+                             label_transform=label_transform)
+
+Y = ImageFolderSegmentationY(images_path=image_path,
+                             label_path=label_path,
+                             transform=transform,
+                             label_transform=label_transform)
+
+
 #
 # image_path2 = '/data/scene-segmentation/CamVid/test/*.png'
 #
@@ -103,4 +116,4 @@ net = skorch.NeuralNet(
     train_split=None
 )
 
-net.fit(var)
+net.fit(X, Y)
