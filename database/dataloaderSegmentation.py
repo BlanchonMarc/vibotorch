@@ -92,7 +92,7 @@ class ImageFolderSegmentation(Dataset):
         if self.label_transform is not None:
             label = self.label_transform(label)
 
-        return image, label
+        return (image, label)
 
     def __len__(self):
         return len(self.image_filenames)
