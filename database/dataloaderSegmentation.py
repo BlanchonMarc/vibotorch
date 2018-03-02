@@ -5,6 +5,7 @@ Creating a Dataloader for segmentation taks
 import os
 import glob
 from PIL import Image
+import torch
 from torch.utils.data import Dataset
 from torch.autograd import Variable
 
