@@ -19,6 +19,8 @@ from compute_weight import WeightComputationMedian
 from compute_weight import NormalizedWeightComputationMedian
 import skorch
 from skorch import NeuralNet
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 
 
 class NormalizeInput:
