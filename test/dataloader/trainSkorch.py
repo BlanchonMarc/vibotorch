@@ -98,14 +98,10 @@ lrs = [0.001]
 net = skorch.NeuralNet(
     module=network,
     criterion=torch.nn.CrossEntropyLoss,
+    max_epochs=10,
+    lr=0.1,
 )
 
-model = Pipeline([
-    ('my-features', network.state_dict()),
-    ('net', net),
-])
-model.fit(trainloader)
+net.fit(trainloader)
 
 # saving
-with open('testskorch.pkl', 'wb') as f:
-    pickle.dump(model, f)
