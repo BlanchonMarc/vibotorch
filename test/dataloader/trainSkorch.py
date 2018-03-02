@@ -101,7 +101,13 @@ net = skorch.NeuralNet(
     max_epochs=10,
     lr=0.1,
 )
+inputs = np.array()
+labels = np.array()
+for i, data in tqdm(enumerate(trainloader, 0)):
+    inputs, labels = data
+    inputs.append(Variable(inputs.cuda()))
+    labels.append(Variable(labels.cuda()))
 
-net.fit(var)
+net.fit(inputs,labels)
 
 # saving
