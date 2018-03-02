@@ -93,7 +93,7 @@ model.cuda()
 epochs = [200]
 lrs = [0.001]
 
-net = NeuralNet(
+net = skorch.NeuralNet(
     module=model,
     criterion=torch.nn.CrossEntropyLoss,
 )
