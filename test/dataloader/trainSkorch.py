@@ -115,7 +115,8 @@ net = skorch.NeuralNet(
     lr=0.1,
     train_split=None,
     use_cuda=True,
-    batch_size=10
+    batch_size=10,
+    callbacks=None
 )
 
 net.fit(X, Y)
