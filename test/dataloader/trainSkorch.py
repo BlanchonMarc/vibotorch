@@ -113,7 +113,8 @@ net = skorch.NeuralNet(
     criterion=torch.nn.CrossEntropyLoss,
     max_epochs=10,
     lr=0.1,
-    train_split=None
+    train_split=None,
+    use_cuda=True
 )
 
 net.fit(X, Y)
