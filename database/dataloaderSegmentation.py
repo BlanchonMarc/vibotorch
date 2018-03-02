@@ -194,9 +194,9 @@ class ImageFolderSegmentationX(Dataset):
             image = self.transform(image)
 
         if self.cuda:
-            return Variable(image.cuda())
+            return image.cuda()
         else:
-            return Variable(image)
+            return image
 
     def __len__(self):
         return len(self.image_filenames)
@@ -297,9 +297,9 @@ class ImageFolderSegmentationY(Dataset):
             label = self.label_transform(label)
 
         if self.cuda:
-            return Variable(label.cuda())
+            return label.cuda()
         else:
-            return Variable(label)
+            return label
 
     def __len__(self):
         return len(self.image_filenames)
