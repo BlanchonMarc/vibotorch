@@ -17,6 +17,8 @@ from tqdm import tqdm
 from metrics import evaluation
 from compute_weight import WeightComputationMedian
 from compute_weight import NormalizedWeightComputationMedian
+import skorch
+from skorch import NeuralNet
 
 
 class NormalizeInput:
@@ -66,7 +68,7 @@ trainloader = torch.utils.data.DataLoader(var, batch_size=10,
                                           shuffle=True, num_workers=10,
                                           pin_memory=True)
 
-# 
+#
 # image_path2 = '/data/scene-segmentation/CamVid/test/*.png'
 #
 # label_path2 = '/data/scene-segmentation/CamVid/testannot/*.png'
