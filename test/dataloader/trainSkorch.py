@@ -101,7 +101,7 @@ net = skorch.NeuralNet(
 )
 
 model = Pipeline([
-    ('my-features', skorch.get_features()),
+    ('my-features', model.state_dict()),
     ('net', net),
 ])
 model.fit(trainloader)
