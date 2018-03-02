@@ -194,7 +194,7 @@ class ImageFolderSegmentationX(Dataset):
             image = self.transform(image)
 
         if self.cuda:
-            return image.cuda()
+            return Variable(image.cuda())
         else:
             return image
 
@@ -297,7 +297,7 @@ class ImageFolderSegmentationY(Dataset):
             label = self.label_transform(label)
 
         if self.cuda:
-            return label.cuda()
+            return Variable(label.cuda())
         else:
             return label
 
