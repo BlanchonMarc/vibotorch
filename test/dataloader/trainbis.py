@@ -88,7 +88,7 @@ model.init_encoder()
 # model = torch.nn.DataParallel(model,
 #                              device_ids=range(torch.cuda.device_count()))
 model.cuda()
-epochs = [200]
+epochs = [300]
 lrs = [0.001]
 
 metrics = evaluation(n_classes=n_classes, lr=lrs[0], modelstr="SegNet",
