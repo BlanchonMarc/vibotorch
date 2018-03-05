@@ -1,6 +1,6 @@
 import sys
 sys.path.append('../../database/')
-sys.path.append('../../nn/')
+sys.path.append('../../segmentation/models/')
 import torch
 import torchvision
 import numpy as np
