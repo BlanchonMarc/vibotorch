@@ -68,3 +68,7 @@ benchmarks/bench_covertype_data/
 _configtest.o.d
 
 *.log
+*.txt
+*.npy
+*.npz
+*.png
