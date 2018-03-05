@@ -27,14 +27,15 @@ from torch import autograd, optim
 
 class NeuralNetwork(nn.Module):
     """Abstract Base Class to ensure the optimal quantity of functions."""
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, in_channels, n_classes):
+        super(NeuralNetwork, self).__init__()
         pass
 
-    def forward(self, inputs) -> None:
+    def forward(self, inputs):
         pass
 
-class SegNet(NeuralNetwork):
+
+class SegNet(nn.Module):
     """Derived Class to define a Segnet Architecture of NN
 
     Attributes
@@ -47,12 +48,13 @@ class SegNet(NeuralNetwork):
 
     References
     ----------
-    SegNet: A Deep Convolutional Encoder-Decoder Architecture for Image Segmentation
+    SegNet: A Deep Convolutional Encoder-Decoder Architecture
+    for Image Segmentation
     Vijay Badrinarayanan, Alex Kendall, Roberto Cipolla, Senior Member, IEEE,
     """
-    def __init__(self, in_channels : int, n_classes : int) -> None:
+    def __init__(self, in_channels=3, n_classes=21):
         """Sequential Instanciation of the different Layers"""
-        super().__init__()
+        super(SegNet, self).__init__()
 
         self.layer_1 = SegnetLayer_Encoder(in_channels, 64, 2)
         self.layer_2 = SegnetLayer_Encoder(64, 128, 2)
@@ -66,7 +68,7 @@ class SegNet(NeuralNetwork):
         self.layer_9 = SegnetLayer_Decoder(128, 64, 2)
         self.layer_10 = SegnetLayer_Decoder(64, n_classes, 2)
 
-    def forward(self, inputs : torch.Tensor) -> torch.Tensor:
+    def forward(self, inputs):
         """Sequential Computation, see nn.Module.forward methods PyTorch"""
 
         down1, indices_1, unpool_shape1 = self.layer_1(inputs=inputs,

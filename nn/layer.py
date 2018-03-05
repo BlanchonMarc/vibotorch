@@ -30,17 +30,18 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.nn as nn
 
+
 class Layer(nn.Module):
     """Abstract Base Class to ensure the optimal quantity of functions."""
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self):
+        super(Layer, self).__init__()
         pass
 
-    def forward(self) -> None:
+    def forward(self):
         pass
 
 
-class SegnetLayer_Decoder(Layer):
+class SegnetLayer_Decoder(nn.Module):
     """Derived Class to define a Decoder Layer of Segnet Architecture
 
     Attributes
@@ -56,12 +57,12 @@ class SegnetLayer_Decoder(Layer):
 
     References
     ----------
-    SegNet: A Deep Convolutional Encoder-Decoder Architecture for Image Segmentation
+    SegNet: A Deep Convolutional Encoder-Decoder Architecture
+    for Image Segmentation
     Vijay Badrinarayanan, Alex Kendall, Roberto Cipolla, Senior Member, IEEE,
     """
-    def __init__(self, in_size : int, out_size : int,
-                 layer_size : int) -> None:
-        super().__init__()
+    def __init__(self, in_size, out_size, layer_size):
+        super(SegnetLayer_Decoder, self).__init__()
         if layer_size == 2:
             self.unpool = nn.MaxUnpool2d(2, 2)
             self.conv1 = conv2DBatchNormRelu(in_size, in_size, 3, 1, 1)
@@ -72,9 +73,7 @@ class SegnetLayer_Decoder(Layer):
             self.conv2 = conv2DBatchNormRelu(in_size, in_size, 3, 1, 1)
             self.conv3 = conv2DBatchNormRelu(in_size, out_size, 3, 1, 1)
 
-    def forward(self, inputs : torch.Tensor, indices : torch.Tensor,
-                output_shape : torch.Tensor ,
-                layer_size : int) -> torch.Tensor:
+    def forward(self, inputs, indices, output_shape, layer_size):
         """Processing in Sequential - See PyTorch Doc"""
         if layer_size == 2:
             outputs = self.unpool(input=inputs, indices=indices,
@@ -92,7 +91,7 @@ class SegnetLayer_Decoder(Layer):
         return outputs
 
 
-class SegnetLayer_Encoder(Layer):
+class SegnetLayer_Encoder(nn.Module):
     """Derived Class to define an Encoder Layer of Segnet Architecture
 
     Attributes
@@ -108,12 +107,12 @@ class SegnetLayer_Encoder(Layer):
 
     References
     ----------
-    SegNet: A Deep Convolutional Encoder-Decoder Architecture for Image Segmentation
+    SegNet: A Deep Convolutional Encoder-Decoder Architecture
+    for Image Segmentation
     Vijay Badrinarayanan, Alex Kendall, Roberto Cipolla, Senior Member, IEEE,
     """
-    def __init__(self, in_size : int, out_size : int,
-                 layer_size : int) -> None:
-        super().__init__()
+    def __init__(self, in_size, out_size, layer_size):
+        super(SegnetLayer_Encoder, self).__init__()
 
         if layer_size == 2:
             self.conv1 = conv2DBatchNormRelu(in_size, out_size, 3, 1, 1)
@@ -126,9 +125,7 @@ class SegnetLayer_Encoder(Layer):
             self.conv3 = conv2DBatchNormRelu(out_size, out_size, 3, 1, 1)
             self.maxpool_with_argmax = nn.MaxPool2d(2, 2, return_indices=True)
 
-    def forward(self, inputs : torch.Tensor,
-                layer_size : torch.Tensor) -> [torch.Tensor,
-                torch.Tensor, torch.Tensor]:
+    def forward(self, inputs, layer_size):
         """Processing in Sequential - See PyTorch Doc"""
         if layer_size == 2:
             outputs = self.conv1(inputs)
@@ -144,7 +141,7 @@ class SegnetLayer_Encoder(Layer):
         return outputs, indices, unpooled_shape
 
 
-class conv2DBatchNormRelu(Layer):
+class conv2DBatchNormRelu(nn.Module):
     """Derived Class to define an Encoder Layer of Segnet Architecture
 
     Attributes
@@ -171,12 +168,12 @@ class conv2DBatchNormRelu(Layer):
         The dilation parameter.
 
     """
-    def __init__(self, in_channels : torch.Tensor,
-                n_filters : torch.Tensor,k_size : int,
-                stride : int, padding : int, bias : bool = True,
-                dilation : int = 1) -> None:
+    def __init__(self, in_channels,
+                 n_filters, k_size,
+                 stride, padding, bias=True,
+                 dilation=1):
         """Preprocessing the Sequence"""
-        super().__init__()
+        super(conv2DBatchNormRelu, self).__init__()
 
         conv_mod = nn.Conv2d(int(in_channels), int(n_filters),
                              kernel_size=k_size, padding=padding,

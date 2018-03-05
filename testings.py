@@ -1,16 +1,18 @@
 # Testing the DataLoader
 
-from database.database import DatabaseLoader,DatabaseTorch
+from database.database import DatabaseLoader, DatabaseTorch
 
 root_dataset = '/Users/marc/Github/NeuralNetwork/Datasets/CamVid/'
 inputs = ['train/', 'val/', 'test/']
 checkings = ['trainannot/', 'valannot/', 'testannot/']
-Db = DatabaseTorch(root=root_dataset, train_folders=inputs, test_folders=checkings)
+Db = DatabaseTorch(root=root_dataset, train_folders=inputs,
+                   test_folders=checkings)
 
-data_dict = Db(batch_size = 3, shuffle = False, num_workers = 1)
+data_dict = Db(batch_size=1, shuffle=False, num_workers=1)
+
+print(data_dict['train'].size())
 
 # print(data_dict['train'])
-
 
 # Testing the Network class
 
@@ -25,7 +27,8 @@ data_dict = Db(batch_size = 3, shuffle = False, num_workers = 1)
 # nb = 64
 #
 # input = torch.autograd.Variable(torch.rand(batch_size, input_size, nb, nb))
-# target = torch.autograd.Variable(torch.rand(batch_size, num_classes, nb, nb)).long()
+# target = torch.autograd.Variable(torch.rand(batch_size,
+# num_classes, nb, nb)).long()
 #
 #
 # model = SegNet(in_channels=input_size, n_classes=num_classes)
