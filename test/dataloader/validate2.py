@@ -15,6 +15,39 @@ from torch.autograd import Variable
 from tqdm import tqdm
 
 
+class to_label:
+    """Class to convert PIL images to specific format of torch.Tensor."""
+    def __call__(self, _input):
+        return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
+
+
+class to_long:
+    """Class to convert PIL images to specific format of torch.Tensor."""
+    def __call__(self, _input):
+        # return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
+        return _input.type(torch.LongTensor)
+
+
+class load_label:
+    """Class to convert PIL images to specific format of torch.Tensor."""
+    def __call__(self, _input):
+        # return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
+        return torch.from_numpy(np.array(_input, dtype=np.uint8)).long()
+
+
+class relabel:
+    """Class to relabel along each channels a torch.Tensor"""
+    def __init__(self, olabel, nlabel):
+        self.olabel = olabel
+        self.nlabel = nlabel
+
+    def __call__(self, _input):
+        assert isinstance(_input,
+                          torch.LongTensor), 'tensor needs to be LongTensor'
+
+        _input[_input == self.olabel] = self.nlabel
+        return _input
+
 class runningScore(object):
 
     def __init__(self, n_classes):
@@ -81,13 +114,6 @@ def convert_state_dict(state_dict):
     return c
 
 
-class load_label:
-    """Class to convert PIL images to specific format of torch.Tensor."""
-    def __call__(self, _input):
-        # return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
-        return torch.from_numpy(np.array(_input, dtype=np.uint8)).long()
-
-
 transform = Compose([
     CenterCrop(256),
     ToTensor(),
@@ -117,9 +143,9 @@ valloader = torch.utils.data.DataLoader(var, batch_size=1,
 n_classes = 12
 running_metrics = runningScore(n_classes=n_classes)
 model = SegNet(n_classes=n_classes)
-# state = convert_state_dict(torch.load('segnet_Camvid_best_model.pkl')
+# state = convert_state_dict(torch.load('segnet_Camvid_best_model2.pkl')
 #                            ['model_state'])
-model.load_state_dict(torch.load('segnet_Camvid_best_model.pkl')
+model.load_state_dict(torch.load('segnet_Camvid_best_model2.pkl')
                            ['model_state'])
 model.eval()
 
@@ -131,6 +157,13 @@ for i, (images, labels) in tqdm(enumerate(valloader)):
         outputs = model(images)
         pred = outputs.data.max(1)[1].cpu().numpy()
         gt = labels.data.cpu().numpy()
-        np.save("pred/pred" + str(i), pred)
 
-        np.save("gt/gt" + str(i), gt)
+        running_metrics.update(gt, pred)
+
+score, class_iou = running_metrics.get_scores()
+
+for k, v in score.items():
+    print(k, v)
+
+for i in range(n_classes):
+    print(i, class_iou[i])

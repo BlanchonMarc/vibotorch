@@ -15,6 +15,39 @@ from torch.autograd import Variable
 from tqdm import tqdm
 
 
+class to_label:
+    """Class to convert PIL images to specific format of torch.Tensor."""
+    def __call__(self, _input):
+        return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
+
+
+class to_long:
+    """Class to convert PIL images to specific format of torch.Tensor."""
+    def __call__(self, _input):
+        # return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
+        return _input.type(torch.LongTensor)
+
+
+class load_label:
+    """Class to convert PIL images to specific format of torch.Tensor."""
+    def __call__(self, _input):
+        # return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
+        return torch.from_numpy(np.array(_input, dtype=np.uint8)).long()
+
+
+class relabel:
+    """Class to relabel along each channels a torch.Tensor"""
+    def __init__(self, olabel, nlabel):
+        self.olabel = olabel
+        self.nlabel = nlabel
+
+    def __call__(self, _input):
+        assert isinstance(_input,
+                          torch.LongTensor), 'tensor needs to be LongTensor'
+
+        _input[_input == self.olabel] = self.nlabel
+        return _input
+
 class runningScore(object):
 
     def __init__(self, n_classes):
@@ -74,18 +107,11 @@ def convert_state_dict(state_dict):
     kstore = []
     vstore = []
     for k, v in state_dict.items():
-        namestore.append(k[7:])
+        namestore.append(k[8:])
         kstore.append(k)
         vstore.append(v)
     c = dict(zip(namestore, vstore))
     return c
-
-
-class load_label:
-    """Class to convert PIL images to specific format of torch.Tensor."""
-    def __call__(self, _input):
-        # return torch.from_numpy(np.array(_input)).long().unsqueeze(0)
-        return torch.from_numpy(np.array(_input, dtype=np.uint8)).long()
 
 
 transform = Compose([
@@ -131,6 +157,13 @@ for i, (images, labels) in tqdm(enumerate(valloader)):
         outputs = model(images)
         pred = outputs.data.max(1)[1].cpu().numpy()
         gt = labels.data.cpu().numpy()
-        np.save("pred/pred" + str(i), pred)
 
-        np.save("gt/gt" + str(i), gt)
+        running_metrics.update(gt, pred)
+
+score, class_iou = running_metrics.get_scores()
+
+for k, v in score.items():
+    print(k, v)
+
+for i in range(n_classes):
+    print(i, class_iou[i])

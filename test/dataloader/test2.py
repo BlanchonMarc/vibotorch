@@ -117,9 +117,9 @@ valloader = torch.utils.data.DataLoader(var, batch_size=1,
 n_classes = 12
 running_metrics = runningScore(n_classes=n_classes)
 model = SegNet(n_classes=n_classes)
-# state = convert_state_dict(torch.load('segnet_Camvid_best_model.pkl')
+# state = convert_state_dict(torch.load('segnet_Camvid_best_model2.pkl')
 #                            ['model_state'])
-model.load_state_dict(torch.load('segnet_Camvid_best_model.pkl')
+model.load_state_dict(torch.load('segnet_Camvid_best_model2.pkl')
                            ['model_state'])
 model.eval()
 
