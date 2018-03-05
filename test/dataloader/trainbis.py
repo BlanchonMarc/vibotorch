@@ -89,7 +89,7 @@ model.init_encoder()
 #                              device_ids=range(torch.cuda.device_count()))
 model.cuda()
 epochs = [300]
-lrs = [0.001]
+lrs = [0.0001]
 
 metrics = evaluation(n_classes=n_classes, lr=lrs[0], modelstr="SegNet",
                      textfile="newlog.txt")
