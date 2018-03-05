@@ -116,7 +116,8 @@ net = skorch.NeuralNet(
     train_split=None,
     use_cuda=True,
     batch_size=10,
-    callbacks=None
+    callbacks__train_loss__target_extractor=lambda x: x,
+    callbacks__valid_loss__target_extractor=lambda x: x
 )
 
 # x = torch.FloatTensor()
