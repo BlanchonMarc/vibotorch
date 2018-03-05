@@ -1,7 +1,7 @@
 import torch
 import sys
 sys.path.append('../utils/')
-sys.path.append('../nn/')
+sys.path.append('../segmentation/models/')
 from tracker import Tracker
 from nn import *
 
