@@ -23,7 +23,7 @@ import skorch
 from skorch import NeuralNet
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.utils import LeavePLabelOut
+from sklearn.cross_validation import LeavePLabelOut
 from multiprocessing import set_start_method
 
 try:
