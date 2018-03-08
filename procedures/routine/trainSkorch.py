@@ -23,6 +23,12 @@ import skorch
 from skorch import NeuralNet
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
+from multiprocessing import set_start_method
+
+try:
+    set_start_method('spawn')
+except RuntimeError:
+    pass
 
 
 class NormalizeInput:
@@ -98,33 +104,67 @@ Y = ImageFolderSegmentationY(images_path=image_path,
 #                                         pin_memory=True)
 #
 
+# n_classes = 12
+#
+# network = SegNet(in_channels=3, n_classes=n_classes)
+# network.init_encoder()
+# # model = torch.nn.DataParallel(model,
+# #                              device_ids=range(torch.cuda.device_count()))
+# network.cuda()
+# epochs = [200]
+# lrs = [0.001]
+#
+# net = skorch.NeuralNet(
+#     module=network,
+#     criterion=torch.nn.CrossEntropyLoss,
+#     max_epochs=10,
+#     lr=0.1,
+#     train_split=None,
+#     use_cuda=True,
+#     batch_size=10,
+#     callbacks__train_loss__target_extractor=lambda x: x,
+#     callbacks__valid_loss__target_extractor=lambda x: x
+# )
+#
+# # x = torch.FloatTensor()
+# # y = torch.LongTensor()
+# # for i in range(len(X)):
+# #     x = torch.cat((x, X[i]), 0)
+# #     y = torch.cat((y, Y[i]), 0)
+# # xfin = x.unsqueeze(0)
+# # yfin = y.unsqueeze(0)
+# net.fit(X=X, y=Y)
+
 n_classes = 12
 
 network = SegNet(in_channels=3, n_classes=n_classes)
 network.init_encoder()
-# model = torch.nn.DataParallel(model,
-#                              device_ids=range(torch.cuda.device_count()))
+
 network.cuda()
-epochs = [200]
-lrs = [0.001]
 
 net = skorch.NeuralNet(
     module=network,
     criterion=torch.nn.CrossEntropyLoss,
-    max_epochs=10,
-    lr=0.1,
     train_split=None,
     use_cuda=True,
-    batch_size=10,
-    callbacks__train_loss__target_extractor=lambda x: x,
-    callbacks__valid_loss__target_extractor=lambda x: x
+    batch_size=5,
 )
 
-# x = torch.FloatTensor()
-# y = torch.LongTensor()
-# for i in range(len(X)):
-#     x = torch.cat((x, X[i]), 0)
-#     y = torch.cat((y, Y[i]), 0)
-# xfin = x.unsqueeze(0)
-# yfin = y.unsqueeze(0)
-net.fit(X=X, y=Y)
+params = {
+    'lr': [0.01, 0.02],
+    'max_epochs': [5, 10]
+}
+
+# if only training
+# net.fit(X=X, y=y)
+
+image_indicators = np.hstack([np.repeat(i, len(x)) for i, x in
+                             enumerate(X)])
+labels = image_indicators % n_classes
+X, y = np.vstack(X), np.hstack(Y)
+
+cv = LeavePLabelOut(labels=labels, p=1)
+gs = GridSearchCV(net, params, scoring='f1', verbose=10, cv=cv, n_jobs=-1)
+
+gs.fit(X=X, y=y)
+print(gs.best_score_, gs.best_params_)
