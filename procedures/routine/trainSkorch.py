@@ -28,7 +28,7 @@ from multiprocessing import set_start_method
 from sklearn.grid_search import GridSearchCV
 
 
-set_start_method('spawn')
+set_start_method('spawn', force=True)
 
 
 
