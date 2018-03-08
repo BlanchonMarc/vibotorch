@@ -24,7 +24,8 @@ from skorch import NeuralNet
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.cross_validation import LeavePLabelOut
-from multiprocessing import set_start_method
+from multiprocessing import set_start_methodfrom sklearn.grid_search import GridSearchCV
+
 
 try:
     set_start_method('spawn')
@@ -148,7 +149,7 @@ net = skorch.NeuralNet(
     criterion=torch.nn.CrossEntropyLoss,
     train_split=None,
     use_cuda=True,
-    batch_size=5,
+    batch_size=10,
 )
 
 params = {
