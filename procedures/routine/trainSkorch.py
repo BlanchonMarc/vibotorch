@@ -24,7 +24,8 @@ from skorch import NeuralNet
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.cross_validation import LeavePLabelOut
-from multiprocessing import set_start_methodfrom sklearn.grid_search import GridSearchCV
+from multiprocessing import set_start_methodfrom
+from sklearn.grid_search import GridSearchCV
 
 
 try:
