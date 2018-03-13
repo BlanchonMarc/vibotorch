@@ -183,6 +183,27 @@ class Routine(object):
             if 'n_classes' in self.dict:
                 self._n_classes = self.dict['n_classes']
 
+        if 'stop_criterion' in self.dict:
+            self._stop_crit = self.dict['stop_criterion']
+
+            if 'brute_force' in self.dict:
+                self._brute_crit = self.dict['brute_force']
+                self._perc_crit = None
+                self._conv_crit = False
+            elif 'percent_loss' in self.dict:
+                self._brute_crit = None
+                self._perc_crit = self.dict['percent_loss']
+                self._conv_crit = False
+            elif 'till_convergence' in self.dict:
+                self._brute_crit = None
+                self._perc_crit = None
+                self._conv_crit = self.dict['till_convergence']
+            else:
+                self._brute_crit = None
+                self._perc_crit = None
+                self._conv_crit = False
+
+
     def _set_Cuda(self):
         '''If Cuda True Set every prior object as cuda objects'''
         self._loss = self._loss.cuda()
