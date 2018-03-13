@@ -32,7 +32,8 @@ class evaluation(object):
 
         with open(self.textsave, 'w'):
             pass
-
+        with open(textfile, 'w'):
+            pass
         self.f = open(textfile, "a")
         self.f.write("\n##################################################\n")
         self.f.write("Training " + modelstr + "\n")

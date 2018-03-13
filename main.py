@@ -38,7 +38,11 @@ if __name__ == '__main__':
             'model': model,
             'trainloader': trainloader,
             'valloader': valloader,
-            'logfile'
+            'max_epochs': 400,
+            'lr': 0.0001,
+            'loss': nn.CrossEntropyLoss(reduce=True, size_average=True),
+            'cuda': False,
+            'logfile': 'log.txt',
         }
 
         trainer = Struct.Routine(dic)
