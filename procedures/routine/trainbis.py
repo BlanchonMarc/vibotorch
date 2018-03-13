@@ -94,7 +94,6 @@ lrs = [0.0001]
 metrics = evaluation(n_classes=n_classes, lr=lrs[0], modelstr="SegNet",
                      textfile="newlog.txt")
 
-
 weights = NormalizedWeightComputationMedian(labels_path=label_path,
                                             n_classes=n_classes)
 

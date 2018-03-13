@@ -72,3 +72,6 @@ _configtest.o.d
 *.npy
 *.npz
 *.png
+
+trained_models/
+**/trained_models/

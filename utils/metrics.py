@@ -27,6 +27,12 @@ class evaluation(object):
 
         self.saving_param = -100
 
+        counter = len(glob.glob1("trained_models/", "*.pkl"))
+        self.textsave = "trained_models/" + "model" + str(counter) + " .pkl"
+
+        with open(self.textsave, 'w'):
+            pass
+
         self.f = open(textfile, "a")
         self.f.write("\n##################################################\n")
         self.f.write("Training " + modelstr + "\n")
@@ -101,8 +107,7 @@ class evaluation(object):
             state = {'epoch': epoch + 1,
                      'model_state': model.state_dict(),
                      'optimizer_state': optim.state_dict(), }
-            torch.save(state,
-                       "{}_{}_best_model.pkl".format('segnet', 'Camvid'))
+            torch.save(state, self.textsave)
 
     def reset(self):
         """Reset the object parameters"""
