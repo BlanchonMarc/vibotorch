@@ -34,6 +34,8 @@ class Routine(object):
 
             self._n_classes = 1
 
+            self._stop_crit = False
+
             self._dict_estimation()
 
             self._opt = optim.Adam(self._model.parameters(), lr=self._lr)
@@ -98,28 +100,28 @@ class Routine(object):
                 firstPass = False
 
             Loss_store.append(aver_Loss)
+            if self._stop_crit:
+                if self._brute_crit is not None:
+                    if (aver_Loss <= self._brute_crit).cpu().numpy():
+                        breaker = True
+                elif self._perc_crit is not None:
+                    criterion_break = (self._perc_crit * firstLoss)
+                    if (criterion_break < aver_Loss).cpu().numpy():
+                        if not counter == 0:
+                            diff = some_list[-1] - some_list[-2]
+                            if (diff <= (criterion_break * self._perc_crit)).cpu().numpy():
+                                counter += 1
+                            else:
+                                counter = 0
+                        counter += 1
+                    else:
+                        counter = 0
 
-            if self._brute_crit is not None:
-                if (aver_Loss >= self._brute_crit).cpu().numpy():
-                    breaker = True
-            elif self._perc_crit is not None:
-                criterion_break = (self._perc_crit * firstLoss)
-                if (criterion_break < aver_Loss).cpu().numpy():
-                    if not counter == 0:
-                        diff = some_list[-1] - some_list[-2]
-                        if (diff <= (criterion_break * self._perc_crit)).cpu().numpy():
-                            counter += 1
-                        else:
-                            counter = 0
-                    counter += 1
-                else:
-                    counter = 0
+                    if counter == 10:
+                        breaker = True
 
-                if counter == 10:
-                    breaker = True
-
-            elif self._conv_crit:
-                check_metrics = True
+                elif self._conv_crit:
+                    check_metrics = True
 
             self._model.eval()
 
