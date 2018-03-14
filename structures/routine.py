@@ -124,7 +124,7 @@ class Routine(object):
             self._model.eval()
 
             for i_val, (images_val,
-                        labels_val) in tqdm(enumerate(valloader)):
+                        labels_val) in tqdm(enumerate(self._valloader)):
                 if self._cuda:
                     images_val = Variable(images_val.cuda(), volatile=True)
                     labels_val = Variable(labels_val.cuda(), volatile=True)
