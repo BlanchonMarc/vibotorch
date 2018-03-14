@@ -10,6 +10,7 @@ import warnings
 from tqdm import tqdm
 import torch.nn.functional as F
 from torch.autograd import Variable
+import glob
 
 
 class Routine(object):
@@ -31,6 +32,8 @@ class Routine(object):
 
             self._logname = None
 
+            self._n_classes = 1
+
             self._dict_estimation()
 
             self._opt = optim.Adam(self._model.parameters(), lr=self._lr)
@@ -39,10 +42,10 @@ class Routine(object):
                 self._set_Cuda()
 
             if self._logname is not None:
-                self.metrics = evaluation(n_classes=self._n_classes,
-                                          lr=self._lf,
-                                          modelstr="Model",
-                                          textfile=self._logname)
+                self.metrics = metrics.evaluation(n_classes=self._n_classes,
+                                                  lr=self._lr,
+                                                  modelstr="Model",
+                                                  textfile=self._logname)
             else:
                 warnings.warn("Without log there will be no metrics estimation",
                               RuntimeWarning,
@@ -223,6 +226,9 @@ class Routine(object):
 
         if 'max_epochs' in self.dict:
             self._n_ep = self.dict['max_epochs']
+
+        if 'n_classes' in self.dict:
+            self._n_classes = self.dict['n_classes']
 
         if 'loss' in self.dict:
             self._loss = self.dict['loss']

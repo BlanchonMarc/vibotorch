@@ -1,6 +1,7 @@
 from structures import routine as Struct
 from segmentation.models import nn as NeuralNet
 from loader_init import loader_init as Loader
+from torch import nn
 
 
 if __name__ == '__main__':
@@ -38,6 +39,7 @@ if __name__ == '__main__':
             'model': model,
             'trainloader': trainloader,
             'valloader': valloader,
+            'n_classes': n_classes,
             'max_epochs': 400,
             'lr': 0.0001,
             'loss': nn.CrossEntropyLoss(reduce=True, size_average=True),
