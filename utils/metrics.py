@@ -27,6 +27,7 @@ class evaluation(object):
         self.MeanAcc = []
         self.IoU = []
 
+        self.textfile = textfile
         self.saving_param = -100
         if not os.path.exists("trained_models/"):
             os.makedirs("trained_models/")
@@ -36,9 +37,9 @@ class evaluation(object):
 
         with open(self.textsave, 'w'):
             pass
-        with open(textfile, 'w'):
+        with open(self.textfile, 'w'):
             pass
-        self.f = open(textfile, "a")
+        self.f = open(self.textfile, "a")
         self.f.write("\n##################################################\n")
         self.f.write("Training " + modelstr + "\n")
         self.f.write("Leaning Rate " + str(lr) + "\n")
@@ -90,7 +91,7 @@ class evaluation(object):
         self.overallAcc = np.float32(np.mean(self.overallAcc))
         self.MeanAcc = np.float32(np.mean(self.MeanAcc))
         self.IoU = np.float32(np.mean(self.IoU))
-        self.f = open(textfile, "a")
+        self.f = open(self.textfile, "a")
         self.f.write("Epoch [" + str(epoch + 1) + " / " + str(
             max_epoch) + "]\n")
         self.f.write("False Positive: " + str(self.FalseP) + "\n")
