@@ -51,6 +51,12 @@ class Routine(object):
     def fit(self):
         '''Train the model'''
 
+        breaker = False
+        Loss_store = []
+        counterPercent = 0
+        firstLoss = 0.0
+        firstPass = True
+
         for epoch in range(self._n_ep):
             self._model.train()
             aver_Loss = 0
@@ -81,6 +87,34 @@ class Routine(object):
                                                       ep,
                                                       aver_Loss))
 
+            if firstPass:
+                firstLoss = aver_Loss
+                firstPass = False
+
+            Loss_store.append(aver_Loss)
+
+            if self._brute_crit is not None:
+                if aver_Loss >= self._brute_crit:
+                    breaker = True
+            elif self._perc_crit is not None:
+                criterion_break = (self._perc_crit * firstLoss)
+                if criterion_break < aver_Loss:
+                    if not counter == 0:
+                        diff = some_list[-1] - some_list[-2]
+                        if diff <= (criterion_break * self._perc_crit):
+                            counter += 1
+                        else:
+                            counter = 0
+                    counter += 1
+                else:
+                    counter = 0
+
+                if counter == 10:
+                    breaker = True
+
+            elif self._conv_crit:
+                pass
+
             self._model.eval()
 
             for i_val, (images_val,
@@ -104,8 +138,16 @@ class Routine(object):
                 self.metrics.estimate(epoch, ep, model, optimizer)
                 self.metrics.print_major_metric()
                 self.metrics.reset()
-        if _logname is not None:
-            self.metrics.close()
+            if breaker:
+                print('Stopping Criterion Reached')
+                if _logname is not None:
+                    self.metrics.close()
+                break
+            else:
+                if _logname is not None:
+                    self.metrics.close()
+
+        print('Stopping Criterion have not been Reached')
 
     def predict(self):
         '''Test the model with one or multiple inputs'''
