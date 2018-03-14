@@ -117,7 +117,7 @@ class Routine(object):
                     else:
                         counterPercent = 0
 
-                    if counterPercent == 10:
+                    if counterPercent == 2:
                         breaker = True
 
                 elif self._conv_crit:
