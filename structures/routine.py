@@ -162,7 +162,8 @@ class Routine(object):
                 if self._logname is not None:
                     self.metrics.close()
 
-        print('Stopping Criterion have not been Reached')
+        if not breaker:
+            print('Stopping Criterion have not been Reached')
 
     def predict(self):
         '''Test the model with one or multiple inputs'''

@@ -46,7 +46,9 @@ if __name__ == '__main__':
             'cuda': True,
             'logfile': 'log.txt',
             'stop_criterion': True,
-            'brute_force': 3.00,
+            # 'brute_force': 3.00,
+            'percent_loss': 0.99,
+            # 'till_convergence': True,
         }
 
         trainer = Struct.Routine(dic)
