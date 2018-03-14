@@ -90,7 +90,7 @@ class evaluation(object):
         self.overallAcc = np.float32(np.mean(self.overallAcc))
         self.MeanAcc = np.float32(np.mean(self.MeanAcc))
         self.IoU = np.float32(np.mean(self.IoU))
-
+        self.f = open(textfile, "a")
         self.f.write("Epoch [" + str(epoch + 1) + " / " + str(
             max_epoch) + "]\n")
         self.f.write("False Positive: " + str(self.FalseP) + "\n")
