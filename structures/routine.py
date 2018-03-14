@@ -53,9 +53,12 @@ class Routine(object):
 
         breaker = False
         Loss_store = []
+        metricArray = []
         counterPercent = 0
         firstLoss = 0.0
         firstPass = True
+        check_metrics = False
+        terminate_metrics = True
 
         for epoch in range(self._n_ep):
             self._model.train()
@@ -113,7 +116,7 @@ class Routine(object):
                     breaker = True
 
             elif self._conv_crit:
-                pass
+                check_metrics = True
 
             self._model.eval()
 
@@ -132,9 +135,16 @@ class Routine(object):
                     pred = outputs.data.max(1)[1].numpy()
                     groundtruth = labels_val.data.numpy()
 
-                if _logname is not None:
+                if self._logname is not None:
                     self.metrics(groundtruth.ravel(), pred.ravel())
-            if _logname is not None:
+                    metricArray.append(self.metrics.IoU)
+                    if check_metrics:
+                        if not check_metrics[-1] >= check_metrics[-2]:
+                            breaker = True
+                            terminate_metrics = False
+                            break
+
+            if self._logname is not None and terminate_metrics:
                 self.metrics.estimate(epoch, ep, model, optimizer)
                 self.metrics.print_major_metric()
                 self.metrics.reset()
@@ -144,7 +154,7 @@ class Routine(object):
                     self.metrics.close()
                 break
             else:
-                if _logname is not None:
+                if self._logname is not None:
                     self.metrics.close()
 
         print('Stopping Criterion have not been Reached')
