@@ -155,7 +155,7 @@ class Routine(object):
                 self.metrics.reset()
             if breaker:
                 print('Stopping Criterion Reached')
-                if _logname is not None:
+                if self._logname is not None:
                     self.metrics.close()
                 break
             else:
