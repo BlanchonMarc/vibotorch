@@ -45,6 +45,7 @@ if __name__ == '__main__':
             'loss': nn.CrossEntropyLoss(reduce=True, size_average=True),
             'cuda': True,
             'logfile': 'log.txt',
+            'stop_criterion': True,
             'brute_force': 3.00,
         }
 
