@@ -107,7 +107,7 @@ class Routine(object):
                 elif self._perc_crit is not None:
                     criterion_break = (self._perc_crit * firstLoss)
                     if (criterion_break < aver_Loss).cpu().numpy():
-                        if not counter == 0:
+                        if not counterPercent == 0:
                             diff = some_list[-1] - some_list[-2]
                             if (diff <= (criterion_break * self._perc_crit)).cpu().numpy():
                                 counterPercent += 1
