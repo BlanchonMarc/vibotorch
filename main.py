@@ -33,21 +33,21 @@ if __name__ == '__main__':
                                         num_workers=10)
 
         n_classes = 12
-        model = NeuralNet.SegNet(in_channels=3, n_classes=n_classes)
+        model = NeuralNet.UpNet(in_channels=3, n_classes=n_classes)
 
         dic = {
             'model': model,
             'trainloader': trainloader,
             'valloader': valloader,
             'n_classes': n_classes,
-            'max_epochs': 400,
+            'max_epochs': 500,
             'lr': 0.0001,
             'loss': nn.CrossEntropyLoss(reduce=True, size_average=True),
             'cuda': True,
             'logfile': 'log.txt',
-            'stop_criterion': True,
+            # 'stop_criterion': True,
             # 'brute_force': 3.00,
-            'percent_loss': 0.99,
+            # 'percent_loss': 0.99,
             # 'till_convergence': True,
         }
 
