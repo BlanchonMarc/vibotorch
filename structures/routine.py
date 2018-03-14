@@ -100,14 +100,14 @@ class Routine(object):
             Loss_store.append(aver_Loss)
 
             if self._brute_crit is not None:
-                if (aver_Loss >= self._brute_crit).numpy():
+                if (aver_Loss >= self._brute_crit).cpu().numpy():
                     breaker = True
             elif self._perc_crit is not None:
                 criterion_break = (self._perc_crit * firstLoss)
-                if (criterion_break < aver_Loss).numpy():
+                if (criterion_break < aver_Loss).cpu().numpy():
                     if not counter == 0:
                         diff = some_list[-1] - some_list[-2]
-                        if (diff <= (criterion_break * self._perc_crit)).numpy():
+                        if (diff <= (criterion_break * self._perc_crit)).cpu().numpy():
                             counter += 1
                         else:
                             counter = 0
