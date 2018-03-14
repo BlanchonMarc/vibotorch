@@ -6,6 +6,7 @@ from sklearn.metrics import jaccard_similarity_score
 from torchvision import transforms
 from PIL import Image
 import glob
+import os
 
 
 class evaluation(object):
@@ -27,6 +28,8 @@ class evaluation(object):
         self.IoU = []
 
         self.saving_param = -100
+        if not os.path.exists("trained_models/"):
+            os.makedirs("trained_models/")
 
         counter = len(glob.glob1("trained_models/", "*.pkl"))
         self.textsave = "trained_models/" + "model" + str(counter) + ".pkl"

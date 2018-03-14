@@ -90,7 +90,7 @@ class Routine(object):
                 n_it = i
             aver_Loss = aver_Loss / n_it
             print("Averaged Loss Ep[[%d/%d]] : %f" % (save_epoch,
-                                                      ep,
+                                                      self._n_ep,
                                                       aver_Loss))
 
             if firstPass:
