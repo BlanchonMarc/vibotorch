@@ -43,8 +43,9 @@ if __name__ == '__main__':
             'max_epochs': 400,
             'lr': 0.0001,
             'loss': nn.CrossEntropyLoss(reduce=True, size_average=True),
-            'cuda': False,
+            'cuda': True,
             'logfile': 'log.txt',
+            'brute_force': 3.00,
         }
 
         trainer = Struct.Routine(dic)
