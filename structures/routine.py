@@ -148,7 +148,7 @@ class Routine(object):
                             break
 
             if self._logname is not None and terminate_metrics:
-                self.metrics.estimate(epoch, ep, model, optimizer)
+                self.metrics.estimate(epoch, self._n_ep, self._model, self._opt)
                 self.metrics.print_major_metric()
                 self.metrics.reset()
             if breaker:
