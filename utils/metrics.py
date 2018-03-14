@@ -29,7 +29,7 @@ class evaluation(object):
         self.saving_param = -100
 
         counter = len(glob.glob1("trained_models/", "*.pkl"))
-        self.textsave = "trained_models/" + "model" + str(counter) + " .pkl"
+        self.textsave = "trained_models/" + "model" + str(counter) + ".pkl"
 
         with open(self.textsave, 'w'):
             pass

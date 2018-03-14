@@ -261,7 +261,6 @@ class Routine(object):
                 self._perc_crit = None
                 self._conv_crit = False
 
-
     def _set_Cuda(self):
         '''If Cuda True Set every prior object as cuda objects'''
         self._loss = self._loss.cuda()
