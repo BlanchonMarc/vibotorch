@@ -110,14 +110,14 @@ class Routine(object):
                         if not counter == 0:
                             diff = some_list[-1] - some_list[-2]
                             if (diff <= (criterion_break * self._perc_crit)).cpu().numpy():
-                                counter += 1
+                                counterPercent += 1
                             else:
-                                counter = 0
-                        counter += 1
+                                counterPercent = 0
+                        counterPercent += 1
                     else:
-                        counter = 0
+                        counterPercent = 0
 
-                    if counter == 10:
+                    if counterPercent == 10:
                         breaker = True
 
                 elif self._conv_crit:
