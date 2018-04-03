@@ -33,7 +33,9 @@ if __name__ == '__main__':
                                         num_workers=10)
 
         n_classes = 12
-        model = NeuralNet.UpNet(in_channels=3, n_classes=n_classes)
+        model = NeuralNet.MultiSegNet(in_channels=3,
+                                      in_channels1=3,
+                                      n_classes=n_classes)
 
         dic = {
             'model': model,

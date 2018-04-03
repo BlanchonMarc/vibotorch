@@ -165,9 +165,37 @@ class Routine(object):
         if not breaker:
             print('Stopping Criterion have not been Reached')
 
-    def predict(self):
+    def test(self, loadertest):
         '''Test the model with one or multiple inputs'''
-        pass
+        self._model.eval()
+
+        out = np.ndarray(shape=(len(loadertest), 2))
+
+        for i, (images, labels) in tqdm(enumerate(loadertest)):
+                if self._cuda:
+                    self._model.cuda()
+                    images = Variable(images.cuda(), volatile=True)
+                else:
+                    images = Variable(images, volatile=True)
+
+                outputs = self._model(images)
+                pred = outputs.data.max(1)[1].cpu().numpy()
+                if i == 0:
+                    out = np.ndarray(shape=(len(loadertest),
+                                            pred.shape[0],
+                                            pred.shape[1]))
+                out[i] = pred
+
+        return out
+
+    def predict(self, input_, modelIn=None):
+        '''Predict the model with one or multiple inputs'''
+        if model is not None:
+            self._model.load_state_dict(modelIn)
+
+        self._model.eval()
+        output = self._model(input_)
+        return output
 
     def _dict_estimation(self):
         '''Initialization according to input dictionaty'''
