@@ -31,7 +31,7 @@ if __name__ == '__main__':
                                         trainlabel,
                                         valimage,
                                         vallabel,
-                                        batch_size=10,
+                                        batch_size=5,
                                         num_workers=10)
 
         n_classes = 8
