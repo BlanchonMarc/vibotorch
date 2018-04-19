@@ -9,13 +9,13 @@ from utils import compute_weight as cw
 if __name__ == '__main__':
 
         '''Server'''
-        trainimage = '~/OutdoorPola/train/*.png'
+        trainimage = '../../OutdoorPola/train/*.png'
 
-        trainlabel = '~/OutdoorPola/trainannot/*.png'
+        trainlabel = '../../OutdoorPola/trainannot/*.png'
 
-        valimage = '~/OutdoorPola/test/*.png'
+        valimage = '../../OutdoorPola/test/*.png'
 
-        vallabel = '~/OutdoorPola/testannot/*.png'
+        vallabel = '../../OutdoorPola/testannot/*.png'
 
         '''Local'''
 
@@ -37,7 +37,7 @@ if __name__ == '__main__':
         n_classes = 8
         weights = cw.NormalizedWeightComputationMedian(labels_path=trainlabel,
                                                        n_classes=n_classes)
-        weights = torch.from_numpy(weights).float().cuda()
+        weights = torch.from_numpy(weights).float()
         criterion = nn.CrossEntropyLoss(weight=weights, reduce=True,
                                         size_average=True)
         model = NeuralNet.SegNet(in_channels=3,
