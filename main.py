@@ -31,8 +31,8 @@ if __name__ == '__main__':
                                         trainlabel,
                                         valimage,
                                         vallabel,
-                                        batch_size=5,
-                                        num_workers=10)
+                                        batch_size=4,
+                                        num_workers=8)
 
         n_classes = 8
         # weights = cw.NormalizedWeightComputationMedian(labels_path=trainlabel,
@@ -50,7 +50,7 @@ if __name__ == '__main__':
             'n_classes': n_classes,
             'max_epochs': 500,
             'lr': 0.0001,
-            'loss': nn.CrossEntropyLoss(reduce=True, size_average=True),
+            'loss': nn.CrossEntropyLoss(reduce=True, size_average=True).cuda(),
             'cuda': True,
             'logfile': 'log.txt',
             # 'stop_criterion': True,
