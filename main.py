@@ -1,6 +1,7 @@
 from structures import routine as Struct
 from segmentation.models import nn as NeuralNet
 from loader_init import loader_init as Loader
+import torch
 from torch import nn
 from utils import compute_weight as cw
 
