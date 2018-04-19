@@ -42,6 +42,8 @@ if __name__ == '__main__':
                                         size_average=True)
         model = NeuralNet.SegNet(in_channels=3,
                                  n_classes=n_classes)
+        model.init_encoder()
+        model.cuda()
 
         dic = {
             'model': model,
