@@ -31,10 +31,10 @@ if __name__ == '__main__':
                                         trainlabel,
                                         valimage,
                                         vallabel,
-                                        batch_size=4,
+                                        batch_size=5,
                                         num_workers=8)
 
-        n_classes = 8
+        n_classes = 7
         # weights = cw.NormalizedWeightComputationMedian(labels_path=trainlabel,
         #                                                n_classes=n_classes)
         # weights = torch.from_numpy(weights).float()
