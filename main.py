@@ -40,9 +40,8 @@ if __name__ == '__main__':
         weights = torch.from_numpy(weights).float().cuda()
         criterion = nn.CrossEntropyLoss(weight=weights, reduce=True,
                                         size_average=True)
-        model = NeuralNet.MultiSegNet(in_channels=3,
-                                      in_channels1=3,
-                                      n_classes=n_classes)
+        model = NeuralNet.SegNet(in_channels=3,
+                                 n_classes=n_classes)
 
         dic = {
             'model': model,
