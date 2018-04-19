@@ -32,7 +32,7 @@ if __name__ == '__main__':
                                         valimage,
                                         vallabel,
                                         batch_size=10,
-                                        num_workers=5)
+                                        num_workers=10)
 
         n_classes = 8
         weights = cw.NormalizedWeightComputationMedian(labels_path=trainlabel,

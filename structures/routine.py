@@ -224,6 +224,7 @@ class Routine(object):
 
         if 'trainloader' in self.dict:
             self._trainloader = self.dict['trainloader']
+            print('maPREMIEREbite')
         else:
             if trainpaths and transforms:
                 self._trainloader = self._load_(self.dict['traininput'],
@@ -238,6 +239,7 @@ class Routine(object):
 
         if 'valloader' in self.dict:
             self._valloader = self.dict['valloader']
+            print('mabite')
         else:
             if valpaths and transforms:
                 self._valloader = self._load_(self.dict['valinput'],
