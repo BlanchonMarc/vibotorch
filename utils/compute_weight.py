@@ -84,6 +84,7 @@ def WeightComputation(labels_path, n_classes):
     pixels_per_im_cls = [x * size for x in n_im_cls]
 
     freq = np.asarray([(pix_per_class[x] / pixels_per_im_cls[x])
+                       if pixels_per_im_cls[x] != 0 else 0
                        for x in range(len(pix_per_class))])
     # print('Initialweights: ' + str(freq))
     return freq
