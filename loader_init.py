@@ -36,10 +36,9 @@ def loader_init(image_path, label_path, image_path2, label_path2,
         CenterCrop(256),
         ToTensor(),
         # NormalizeInput(),
-        Normalize([0.4119, 0.4251, 0.4327], [0.2741, 0.2851, 0.2828]),
+        Normalize([0.3120, 0.3018, 0.2944], [0.2169, 0.2097, 0.2087]),
     ])
     label_transform = Compose([
-        CenterCrop(256),
         load_label(),
     ])
 

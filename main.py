@@ -2,18 +2,19 @@ from structures import routine as Struct
 from segmentation.models import nn as NeuralNet
 from loader_init import loader_init as Loader
 from torch import nn
+from utils import compute_weight as cw
 
 
 if __name__ == '__main__':
 
         '''Server'''
-        trainimage = '/data/scene-segmentation/CamVid/train/*.png'
+        trainimage = '/home/mblanchon/OutdoorPola/train/*.png'
 
-        trainlabel = '/data/scene-segmentation/CamVid/trainannot/*.png'
+        trainlabel = '/home/mblanchon/OutdoorPola/trainannot/*.png'
 
-        valimage = '/data/scene-segmentation/CamVid/test/*.png'
+        valimage = '/home/mblanchon/OutdoorPola/test/*.png'
 
-        vallabel = '/data/scene-segmentation/CamVid/testannot/*.png'
+        vallabel = '/home/mblanchon/OutdoorPola/testannot/*.png'
 
         '''Local'''
 
@@ -32,7 +33,12 @@ if __name__ == '__main__':
                                         batch_size=10,
                                         num_workers=10)
 
-        n_classes = 12
+        n_classes = 8
+        weights = cw.NormalizedWeightComputationMedian(labels_path=trainlabel,
+                                                       n_classes=n_classes)
+        weights = torch.from_numpy(weights).float().cuda()
+        criterion = nn.CrossEntropyLoss(weight=weights, reduce=True,
+                                        size_average=True)
         model = NeuralNet.MultiSegNet(in_channels=3,
                                       in_channels1=3,
                                       n_classes=n_classes)
