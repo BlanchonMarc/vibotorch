@@ -35,15 +35,15 @@ if __name__ == '__main__':
                                         num_workers=8)
 
         n_classes = 10
-        # weights = cw.NormalizedWeightComputationMedian(labels_path=trainlabel,
-        #                                                n_classes=n_classes)
-        # weights = torch.from_numpy(weights).float()
-        # criterion = nn.CrossEntropyLoss(reduce=True,
-        #                                 size_average=True)
+        weights = cw.NormalizedWeightComputationMedian(labels_path=trainlabel,
+                                                       n_classes=n_classes)
+        weights = torch.from_numpy(weights).float()
+        criterion = nn.CrossEntropyLoss(reduce=True,
+                                        size_average=True)
         model = NeuralNet.SegNet(in_channels=3,
                                  n_classes=n_classes)
-        # model.init_encoder()
-        # model.cuda()
+        model.init_encoder()
+        model.cuda()
 
         dic = {
             'model': model,
@@ -52,7 +52,7 @@ if __name__ == '__main__':
             'n_classes': n_classes,
             'max_epochs': 500,
             'lr': 0.0001,
-            'loss': nn.CrossEntropyLoss(reduce=True, size_average=True),
+            'loss': criterion,
             'cuda': True,
             'logfile': 'log.txt',
             # 'stop_criterion': True,
