@@ -8,13 +8,13 @@ from utils import compute_weight as cw
 if __name__ == '__main__':
 
         '''Server'''
-        trainimage = '/home/mblanchon/OutdoorPola/train/*.png'
+        trainimage = '~/OutdoorPola/train/*.png'
 
-        trainlabel = '/home/mblanchon/OutdoorPola/trainannot/*.png'
+        trainlabel = '~/OutdoorPola/trainannot/*.png'
 
-        valimage = '/home/mblanchon/OutdoorPola/test/*.png'
+        valimage = '~/OutdoorPola/test/*.png'
 
-        vallabel = '/home/mblanchon/OutdoorPola/testannot/*.png'
+        vallabel = '~/OutdoorPola/testannot/*.png'
 
         '''Local'''
 
