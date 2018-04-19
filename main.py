@@ -50,7 +50,7 @@ if __name__ == '__main__':
             'n_classes': n_classes,
             'max_epochs': 500,
             'lr': 0.0001,
-            'loss': nn.CrossEntropyLoss(reduce=True, size_average=True).cuda(),
+            'loss': nn.CrossEntropyLoss(reduce=True, size_average=True),
             'cuda': True,
             'logfile': 'log.txt',
             # 'stop_criterion': True,
