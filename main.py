@@ -19,13 +19,13 @@ if __name__ == '__main__':
 
         '''Local'''
 
-        # trainimage = '../NeuralNetwork/Datasets/CamVid/train/*.png'
+        # trainimage = '/Users/marc/Documents/OutdoorPola/train/*.png'
         #
-        # trainlabel = '../NeuralNetwork/Datasets/CamVid/trainannot/*.png'
+        # trainlabel = '/Users/marc/Documents/OutdoorPola/trainannot/*.png'
         #
-        # valimage = '../NeuralNetwork/Datasets/CamVid/test/*.png'
+        # valimage = '/Users/marc/Documents/OutdoorPola/test/*.png'
         #
-        # vallabel = '../NeuralNetwork/Datasets/CamVid/testannot/*.png'
+        # vallabel = '/Users/marc/Documents/OutdoorPola/testannot/*.png'
 
         trainloader, valloader = Loader(trainimage,
                                         trainlabel,
@@ -34,16 +34,16 @@ if __name__ == '__main__':
                                         batch_size=5,
                                         num_workers=8)
 
-        n_classes = 7
-        weights = cw.NormalizedWeightComputationMedian(labels_path=trainlabel,
-                                                       n_classes=n_classes)
-        weights = torch.from_numpy(weights).float()
-        criterion = nn.CrossEntropyLoss(reduce=True,
-                                        size_average=True)
+        n_classes = 10
+        # weights = cw.NormalizedWeightComputationMedian(labels_path=trainlabel,
+        #                                                n_classes=n_classes)
+        # weights = torch.from_numpy(weights).float()
+        # criterion = nn.CrossEntropyLoss(reduce=True,
+        #                                 size_average=True)
         model = NeuralNet.SegNet(in_channels=3,
                                  n_classes=n_classes)
-        model.init_encoder()
-        model.cuda()
+        # model.init_encoder()
+        # model.cuda()
 
         dic = {
             'model': model,
