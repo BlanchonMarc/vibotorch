@@ -104,13 +104,13 @@ Glob:
 ### Running the Code (main.py)
 
 ```
-# trainimage = '/Users/marc/Documents/OutdoorPola/train/*.png'
-#
-# trainlabel = '/Users/marc/Documents/OutdoorPola/trainannot/*.png'
-#
-# valimage = '/Users/marc/Documents/OutdoorPola/test/*.png'
-#
-# vallabel = '/Users/marc/Documents/OutdoorPola/testannot/*.png'
+trainimage = '/Users/marc/Documents/OutdoorPola/train/*.png'
+
+trainlabel = '/Users/marc/Documents/OutdoorPola/trainannot/*.png'
+
+valimage = '/Users/marc/Documents/OutdoorPola/test/*.png'
+
+vallabel = '/Users/marc/Documents/OutdoorPola/testannot/*.png'
 
 trainloader, valloader = Loader(trainimage,
                                 trainlabel,
