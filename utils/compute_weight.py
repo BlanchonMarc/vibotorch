@@ -5,7 +5,7 @@ import glob
 
 def SimpleWeightComputation(labels_path, n_classes):
     """Compute weight in a basic way, Parity in Dataset"""
-    lbl_pths = glob.glob(labels_path)
+    lbl_pths = glob.glob(labels_path)r
     # lbl_container = []
     pix_per_class = [0] * n_classes
     size = 0
@@ -21,7 +21,9 @@ def SimpleWeightComputation(labels_path, n_classes):
 
     pixel_per_dataset = size * len(lbl_pths)
 
-    freq = np.asarray([(x / pixel_per_dataset) for x in pix_per_class])
+    freq = np.asarray([(x / pixel_per_dataset)
+                       if pixel_per_dataset != 0 else 0
+                       for x in pix_per_class])
     # print('Initialweights: ' + str(freq))
     return freq
 
@@ -113,3 +115,8 @@ def NormalizedWeightComputationMedian(labels_path, n_classes):
     weight = np.median(freq) / freq
     weight = weight / weight.sum()
     return weight
+
+
+if __name__ == "__main__":
+    test = SimpleWeightComputation("../../NeuralNetwork/Datasets/CamVid/trainannot/*png", 13)
+    print(test)

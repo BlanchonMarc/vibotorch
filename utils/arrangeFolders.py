@@ -16,9 +16,9 @@ list2 = number_list[int(2124 / 3): int(2 * (2124 / 3))]
 list3 = number_list[int(2 * (2124 / 3)):]
 
 path, dirs, files = next(os.walk(
-    "/Users/marc/Aquisition Images Final/HSL - Ratcliff1 - Polar/output"))
+    "/Users/marc/Desktop/rbg/image/output/image"))
 path2, dirs2, files2 = next(os.walk(
-    "/Users/marc/Aquisition Images Final/GroundTruth/output"))
+    "/Users/marc/Desktop/rbg/image/output/gt"))
 
 out_listNormal = []
 out_listGT = []

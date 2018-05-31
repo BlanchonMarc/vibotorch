@@ -1,8 +1,8 @@
 import Augmentor
 from Augmentor import Pipeline
 
-p = Augmentor.Pipeline("/Users/marc/Aquisition Images Final/HSL - Ratcliff1 - Polar") # ensure you press enter after this, don't just c&p this code.
-p.ground_truth("/Users/marc/Aquisition Images Final/GroundTruth")
+p = Augmentor.Pipeline("/Users/marc/Desktop/rbg/image") # ensure you press enter after this, don't just c&p this code.
+p.ground_truth("/Users/marc/Desktop/rbg/gt")
 Pipeline.set_seed(100)
 p.flip_left_right(probability=0.4)
 p.flip_top_bottom(probability=0.4)
