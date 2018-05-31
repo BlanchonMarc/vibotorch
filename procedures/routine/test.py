@@ -89,12 +89,10 @@ class load_label:
 
 
 transform = Compose([
-    CenterCrop(256),
     ToTensor(),
-    Normalize([.5, .5, .5], [.5, .5, .5]),
+    Normalize([0.5121, 0.4880, 0.3435], [0.2866, 0.2727, 0.2305]),
 ])
 label_transform = Compose([
-    CenterCrop(256),
     load_label(),
     # ToTensor(),
     # to_long(),
@@ -102,9 +100,9 @@ label_transform = Compose([
     # relabel(255, 31),
 ])
 
-image_path = '/data/scene-segmentation/CamVid/test/*.png'
+image_path = '/home/mblanchon/rgbData/test/*.png'
 
-label_path = '/data/scene-segmentation/CamVid/testannot/*.png'
+label_path = '/home/mblanchon/rgbData/testannot/*.png'
 
 var = ImageFolderSegmentation(images_path=image_path,
                               label_path=label_path,
@@ -114,12 +112,12 @@ var = ImageFolderSegmentation(images_path=image_path,
 valloader = torch.utils.data.DataLoader(var, batch_size=1,
                                         shuffle=False, num_workers=10)
 
-n_classes = 12
+n_classes = 11
 running_metrics = runningScore(n_classes=n_classes)
 model = SegNet(n_classes=n_classes)
 # state = convert_state_dict(torch.load('segnet_Camvid_best_model.pkl')
 #                            ['model_state'])
-model.load_state_dict(torch.load('segnet_Camvid_best_model.pkl')
+model.load_state_dict(torch.load('/home/mblanchon/Github/vibotorch/trained_models/model58.pkl')
                            ['model_state'])
 model.eval()
 

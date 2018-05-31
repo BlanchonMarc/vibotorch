@@ -7,7 +7,7 @@ def SimpleWeightComputation(labels_path, n_classes):
     """Compute weight in a basic way, Parity in Dataset"""
     lbl_pths = glob.glob(labels_path)
     # lbl_container = []
-    pix_per_class = [0] * 12
+    pix_per_class = [0] * n_classes
     size = 0
     for lbl_pth in lbl_pths:
         lbl = imageio.imread(lbl_pth)

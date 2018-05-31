@@ -7,15 +7,15 @@ from utils import compute_weight as cw
 
 
 if __name__ == '__main__':
-
+        #torch.backends.cudnn.enabled=False
         '''Server'''
-        trainimage = '../../OutdoorPola/train/*.png'
+        trainimage = '../../rgbData/train/*.png'
 
-        trainlabel = '../../OutdoorPola/trainannot/*.png'
+        trainlabel = '../../rgbData/trainannot/*.png'
 
-        valimage = '../../OutdoorPola/test/*.png'
+        valimage = '../../rgbData/test/*.png'
 
-        vallabel = '../../OutdoorPola/testannot/*.png'
+        vallabel = '../../rgbData/testannot/*.png'
 
         '''Local'''
 
@@ -31,15 +31,16 @@ if __name__ == '__main__':
                                         trainlabel,
                                         valimage,
                                         vallabel,
-                                        batch_size=5,
-                                        num_workers=8)
+                                        batch_size=25,
+                                        num_workers=8
+)
 
-        n_classes = 10
-        weights = cw.NormalizedWeightComputationMedian(labels_path=trainlabel,
-                                                       n_classes=n_classes)
-        weights = torch.from_numpy(weights).float()
+        n_classes = 11
+        #weights = cw.NormalizedWeightComputationMedian(labels_path=trainlabel,
+        #                                               n_classes=n_classes)
+        #weights = torch.from_numpy(weights).float()
         criterion = nn.CrossEntropyLoss(reduce=True,
-                                        size_average=True)
+                                        size_average=True).cuda()
         model = NeuralNet.SegNet(in_channels=3,
                                  n_classes=n_classes)
         model.init_encoder()
